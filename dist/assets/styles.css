@@ -1,0 +1,203 @@
+@font-face {
+  font-family: 'Charter Web';
+  src: url('./fonts/charter-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charter Web';
+  src: url('./fonts/charter-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charter Web';
+  src: url('./fonts/charter-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charter Web';
+  src: url('./fonts/charter-bolditalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --ink: #130810;
+  --accent: #5c8aa8;
+  --link: #36586f;
+  --muted: #666;
+  font-family: 'Charter Web', 'Charter', 'Bitstream Charter', 'Sitka Text', 'Times New Roman', KaiTi, 'Kaiti SC', STKaiti, serif;
+  font-size: 16px;
+  background: #f6f5f3;
+  color: var(--ink);
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; line-height: 1.35; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: #294659; text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 1px; text-decoration: underline; }
+.contact a:is(:hover, :focus-visible), .section-heading a:focus-visible,
+.breadcrumb a:focus-visible, .footer a:is(:hover, :focus-visible),
+.note-toc a:focus-visible { text-decoration: underline; }
+.skip-link { position: fixed; left: 12px; top: -80px; padding: 8px 14px; background: white; z-index: 10; }
+.skip-link:focus { top: 12px; }
+.paper {
+  width: min(100% - 64px, 980px);
+  min-height: 1080px;
+  margin: 42px auto;
+  padding: 30px 44px 28px;
+  background: #fff;
+}
+.identity { text-align: center; margin-bottom: 26px; }
+.identity h1 { margin: 0 0 3px; font-size: 34px; line-height: 1.2; font-weight: 400; }
+.identity h1 a { color: inherit; text-decoration: none; }
+.contact { display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; column-gap: 10px; row-gap: 3px; font-size: 15px; }
+.contact a { text-decoration: none; }
+.contact .phone { color: inherit; }
+.contact .separator { color: var(--ink); }
+section { margin-top: 21px; }
+.section-heading { margin: 0 0 8px; padding-bottom: 3px; border-bottom: 1px solid var(--ink); font-size: 19px; line-height: 1.25; font-weight: 700; color: var(--accent); }
+.section-heading a { color: inherit; text-decoration: none; }
+.section-heading a:hover { text-decoration: underline; }
+.section-heading.linked { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.section-heading .section-action { color: var(--link); font-size: 12px; font-weight: 400; white-space: nowrap; }
+.entry + .entry { margin-top: 12px; }
+.entry-top, .entry-sub { display: flex; justify-content: space-between; gap: 10px 20px; align-items: baseline; }
+.entry-title { margin: 0; font-size: 17px; line-height: 1.25; font-weight: 700; }
+.entry-title a { color: var(--link); text-decoration: none; }
+.entry-title a:hover, .entry-title a:focus-visible { color: #294659; text-decoration: underline; }
+.location { font-size: 14px; font-weight: 700; text-align: right; flex-shrink: 0; }
+.entry-sub { margin-top: 2px; font-size: 16px; font-style: italic; }
+.dates { flex-shrink: 0; text-align: right; white-space: nowrap; font-size: 14px; }
+p { margin: 7px 0; }
+.courses { margin-top: 7px; font-size: 15px; }
+.courses p { margin: 1px 0; }
+.skills p { margin: 2px 0; }
+.latex { display: inline-block; letter-spacing: -.07em; }
+.latex .a { position: relative; top: -.3em; margin-left: -.28em; margin-right: -.12em; font-size: .75em; }
+.latex .e { position: relative; top: .23em; margin-left: -.16em; margin-right: -.08em; }
+.resume-list { padding-left: 16px; margin: 6px 0 0; }
+.resume-list li { padding-left: 1px; margin: 4px 0; }
+.resume-list li::marker { font-size: 11px; }
+.empty { font-style: italic; color: var(--muted); margin: 6px 0; }
+.minor-heading { margin: 10px 0 2px; font-size: 15px; }
+.award-list { margin: 3px 0; }
+.award-list li { margin: 3px 0; }
+.award-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 18px; font-style: italic; }
+.award-name { min-width: 0; }
+.publication-entry .entry-title { font-size: 16px; font-weight: 700; line-height: 1.4; }
+.publication-authors { margin: 2px 0; font-size: 16px; }
+.publication-venue { margin: 2px 0; font-size: 16px; }
+.breadcrumb { margin: 0 0 20px; font-size: 13px; color: var(--muted); }
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--link); text-decoration: underline; }
+.breadcrumb span { margin: 0 7px; }
+.detail-title { margin: 0 0 7px; font-size: 25px; line-height: 1.22; }
+.detail-subtitle { margin: 0 0 6px; font-size: 16px; font-style: italic; }
+.detail-meta { display: flex; flex-wrap: wrap; gap: 4px 18px; color: var(--muted); font-size: 14px; }
+.detail-body { margin-top: 24px; }
+.detail-body p { line-height: 1.55; }
+.detail-body section { margin-top: 25px; }
+figure { margin: 18px 0; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: italic; }
+.return-link { margin-top: 30px; font-size: 14px; }
+.footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #ddd; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--muted); }
+.footer a { color: var(--muted); text-decoration: none; }
+.page-intro { margin-bottom: 20px; font-style: italic; color: var(--muted); }
+.note-entry { padding: 14px 0; border-bottom: 1px solid #eee; }
+.note-entry:first-child { padding-top: 5px; }
+.note-entry:last-child { border-bottom: 0; }
+.note-entry-compact { padding: 5px 0; border: 0; }
+.note-entry-compact .entry-title { font-size: 16px; font-weight: 700; }
+.note-entry-compact .dates { font-style: italic; }
+.note-entry p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+.note-tags, .note-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 12px; color: var(--muted); font-size: 13px; }
+.note-meta { margin-top: 12px; }
+.note-meta a { margin-left: auto; }
+.note-summary { margin: 15px 0 0; padding-left: 12px; border-left: 2px solid #d2dfe8; color: var(--muted); line-height: 1.8; }
+.note-toc { margin: 22px 0; padding: 12px 16px; background: #f8fafb; font-size: 14px; }
+.note-toc summary { color: #4e6f84; cursor: pointer; }
+.note-toc ol { margin: 10px 0 2px; padding-left: 23px; line-height: 1.9; }
+.note-toc a { color: var(--muted); text-decoration: none; }
+.note-toc a:hover { color: var(--link); }
+.markdown-body { line-height: 1.85; overflow-wrap: anywhere; }
+.markdown-body p { margin: 14px 0; }
+.markdown-body .section-heading { margin-top: 32px; margin-bottom: 16px; padding-bottom: 8px; font-size: 19px; }
+.markdown-body h3 { margin: 24px 0 12px; font-size: 17px; }
+.markdown-body img { display: block; max-width: 100%; height: auto; margin: 18px auto 8px; border: 1px solid #e2e9ee; border-radius: 3px; }
+.markdown-body p:has(> em:only-child) { text-align: center; color: var(--muted); font-size: 14px; }
+.markdown-body pre { max-width: 100%; overflow-x: auto; padding: 16px 18px; background: #f6f7f8; border: 1px solid #e8ebed; border-radius: 3px; line-height: 1.65; }
+.markdown-body code { font-family: 'Cascadia Code', Consolas, KaiTi, 'Kaiti SC', STKaiti, monospace; font-size: .87em; background: #f2f4f6; padding: 2px 4px; border-radius: 2px; }
+.markdown-body pre code { background: none; padding: 0; overflow-wrap: normal; white-space: pre; }
+.markdown-body blockquote { margin: 18px 0; padding: 2px 16px; border-left: 3px solid #a7becd; color: #52616b; background: #f8fafb; }
+.markdown-body ul, .markdown-body ol { padding-left: 25px; }
+.markdown-body .table-scroll { max-width: 100%; overflow-x: auto; margin: 20px 0; }
+.markdown-body table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.markdown-body th, .markdown-body td { padding: 9px 12px; border: 1px solid #ddd; text-align: left; }
+.markdown-body th { background: #f6f8fa; }
+.markdown-body eq { display: inline; }
+.markdown-body eqn { display: block; overflow-x: auto; overflow-y: hidden; margin: 20px 0; padding: 8px 0; }
+.markdown-body .katex { font-size: 1.08em; line-height: 1.2; overflow-wrap: normal; }
+.markdown-body .katex-display { margin: 0; }
+.markdown-body .katex-display > .katex { white-space: nowrap; }
+.markdown-body .katex .cjk_fallback { font-family: KaiTi, 'Kaiti SC', STKaiti, serif; }
+
+@media (max-width: 760px) {
+  .paper { width: calc(100% - 28px); padding: 28px 24px; margin: 14px auto; }
+  .contact { font-size: 14px; column-gap: 8px; }
+  .entry-top, .entry-sub { flex-wrap: wrap; gap: 2px 12px; }
+  .location { text-align: left; }
+  .entry-sub .dates { margin-left: auto; }
+  .award-row { align-items: flex-start; }
+  .award-row .dates { font-size: 13px; }
+}
+@media (max-width: 480px) {
+  :root { font-size: 15px; background: #fff; }
+  .paper { width: 100%; margin: 0; min-height: 100vh; border: 0; box-shadow: none; padding: 26px 20px; }
+  .identity h1 { font-size: 31px; }
+  .identity { margin-bottom: 25px; }
+  .contact { gap: 4px 9px; }
+  .contact .separator { display: none; }
+  .section-heading { font-size: 18px; }
+  .entry-title { font-size: 16px; }
+  .entry-sub { font-size: 15px; }
+  .entry-sub .dates { margin-left: 0; }
+  .award-row { display: block; }
+  .award-row .dates { display: block; text-align: left; color: var(--muted); }
+  .detail-title { font-size: 23px; }
+  .footer { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+@page { size: letter; margin: 0.4in; }
+@media print {
+  :root { font-size: 11pt; background: #fff; }
+  body { line-height: 1.2; }
+  .paper { width: 100%; min-height: 0; margin: 0; padding: 0; border: 0; box-shadow: none; }
+  .identity { margin-bottom: 16px; }
+  .identity h1 { font-size: 25pt; }
+  .contact { font-size: 10pt; }
+  .breadcrumb, .section-action, .return-link, .footer, .skip-link { display: none !important; }
+  section { margin-top: 13px; }
+  .section-heading { font-size: 13pt; margin-bottom: 5px; break-after: avoid; }
+  .entry-title { font-size: 12pt; }
+  .entry-sub { font-size: 11pt; }
+  .dates, .location { font-size: 10pt; }
+  .courses { font-size: 10pt; }
+  .entry + .entry { margin-top: 7px; }
+  .resume-list li { margin: 2px 0; }
+  .entry, .award-list li, .publication-entry { break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "anonymous-cv-notes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A résumé-style personal website with locally bundled Bitstream Charter fonts.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/server.mjs",
+    "start": "node scripts/server.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "katex": "0.19.0",
+    "markdown-it": "15.0.2",
+    "markdown-it-texmath": "1.0.0"
+  }
+}

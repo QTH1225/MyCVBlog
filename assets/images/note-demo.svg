@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320" viewBox="0 0 800 320" role="img" aria-labelledby="title desc">
+  <title id="title">Quadratic function illustration</title>
+  <desc id="desc">A blue parabola showing y equals x squared on a light grid.</desc>
+  <rect width="800" height="320" rx="4" fill="#f8fafb"/>
+  <g stroke="#e2e9ee" stroke-width="1">
+    <path d="M120 40V270M220 40V270M320 40V270M420 40V270M520 40V270M620 40V270M720 40V270M80 70H740M80 120H740M80 170H740M80 220H740"/>
+  </g>
+  <g stroke="#667783" stroke-width="1.5" fill="none">
+    <path d="M80 270H746M420 283V34"/>
+    <path d="m738 265 8 5-8 5M415 42l5-8 5 8"/>
+  </g>
+  <path d="M120 45Q420 495 720 45" fill="none" stroke="#5c8aa8" stroke-width="4"/>
+  <circle cx="420" cy="270" r="4" fill="#5c8aa8"/>
+  <g font-family="Georgia, serif" font-size="18" fill="#344754">
+    <text x="756" y="276">x</text><text x="432" y="41">y</text>
+    <text x="405" y="299">0</text><text x="556" y="75" font-size="24" fill="#5c8aa8">y = x²</text>
+  </g>
+  <text x="32" y="34" font-family="Georgia, serif" font-size="15" fill="#667783">Image test · local SVG</text>
+</svg>
