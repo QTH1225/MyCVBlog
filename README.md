@@ -18,6 +18,7 @@ Adapted from **Vaishanth R**'s [Resume Professional Template - Software Engineer
 
 - **Edit Markdown directly.** Maintain résumé entries, projects, experience, activities, and publications in documents without editing JavaScript arrays or generating source code.
 - **Résumé styling.** Locally bundled Charter fonts, muted blue headings, thin rules, bold titles, and right-aligned dates. Shared identity headers appear on category and detail pages. Return links sit to the right of the title: details return to their category, and categories return to the résumé.
+- **Mobile layout.** Contact details use two equal columns on narrow screens; activity dates move to their own left-aligned line on phones. Automatic number/date linking is disabled where supported, while explicit contact links stay clickable.
 - **Separate previews and details.** A project's `## Summary` section supplies its homepage preview; the remaining sections form the detail page. The activity preview shows only the role, club, and date.
 - **Images and mathematics.** Project bodies and notes support Markdown images, KaTeX equations, code, tables, and quotations. Equations are rendered at build time and fonts are bundled locally.
 - **Static output.** Generate plain HTML/CSS and assets for static hosting, offline reading, mobile layouts, and printing, without a frontend framework or an online CDN at reading time.
@@ -52,6 +53,7 @@ Start with the [Chinese content editing guide](content/README.md), or edit the f
 
 | Content | Source |
 | --- | --- |
+| Homepage section order | [content/home.md](content/home.md) |
 | Name, phone, email, and profile links | [content/profile.md](content/profile.md) |
 | Education and courses | [content/education.md](content/education.md) |
 | Skills | [content/skills.md](content/skills.md) |
@@ -63,6 +65,23 @@ Start with the [Chinese content editing guide](content/README.md), or edit the f
 | Notes | One Markdown file per note in `notes/` |
 
 **Do not edit `dist/` directly.** Each build replaces this generated directory, including old pages, note sources, and assets. Store content and attachments in their source directories.
+
+### Homepage Section Order
+
+Edit [content/home.md](content/home.md). Move an entire list line up or down to change the order of the homepage sections:
+
+```markdown
+- education
+- skills
+- projects
+- work-experience
+- honors-and-awards
+- publications
+- extracurricular-activities
+- notes
+```
+
+For example, move `- publications` above `- skills` to show publications before skills. Keep all eight identifiers exactly once, using the names above; blank lines are allowed. Duplicate, unknown, or missing sections stop the build with a `content/home.md` error and preserve the last working output. Restart the preview server once after updating the build scripts, then edits to `home.md` trigger a rebuild; refresh the browser to view them. This controls homepage section order; the `order` field in individual project, work experience, and activity files controls entries within those sections. Category and detail page layouts stay the same, and the homepage Notes section stays hidden when printing wherever it is placed.
 
 ## Projects, Experience, and Activities
 
@@ -222,7 +241,8 @@ Links support full HTTP(S) URLs, `assets/...`, `#anchors`, and `note:filename` w
 | --- | --- |
 | Colors, fonts, sizes, spacing, width, mobile layout, and printing | `src/styles.css` |
 | Headings, View all, and return labels | `src/labels.mjs` |
-| Section order, preview limits, header, and footer structure | `scripts/build.mjs` |
+| Homepage section order | `content/home.md` |
+| Preview limits, header, and footer structure | `scripts/build.mjs` |
 | Favicon | `assets/favicon.svg` |
 
 Routine content editing does not require these files. To change preview limits, edit `honors.slice(0, 5)` and `awards.slice(0, 5)` for awards or `notes.slice(0, 5)` for notes.
@@ -240,6 +260,14 @@ npm run check
 Deploy **all files inside `dist/`** to static hosting, preserving asset, category, and note directories. Include the generated `.nojekyll` marker when using GitHub Pages so directories such as `notes/_sources/` are served. Relative links support hosting at a domain root or subdirectory. Node.js is not required on the web server. You can also open `dist/index.html` offline or print the page to PDF from a browser.
 
 Charter fonts load locally. KaiTi remains a system-font fallback and is not distributed. KaTeX fonts and license notices are bundled. This is a file-based static blog without an online editor, authentication, database, or comments. Confirm that your content and attachments are suitable for public sharing, including downloadable note sources.
+
+### Printing to PDF
+
+Open the homepage, press **Ctrl+P** (or **Cmd+P** on macOS), and choose **Save as PDF**. Use **A4**, **100% scale**, the default margins, and turn off the browser's headers and footers. The print stylesheet keeps the locally bundled Charter fonts, uses dark text, and hides navigation, View all links, the website footer, and the homepage Notes section. It prints the other content already shown on the page; it does not expand the full category lists. Page count depends on your content. Detail pages, including individual notes, can also be printed.
+
+Print layout is defined by `@page` and `@media print` in `src/styles.css`: A4 paper with 14 mm margins, right-aligned dates, and page-break rules that try to keep headings with their content, award lists together, and images with their captions. Long code lines wrap when printed. Mobile layout rules apply only to screens. The homepage Notes section is marked with `class="resume-notes"` in `scripts/build.mjs` and hidden only in print, so it remains visible when browsing.
+
+The PDF preview for this update was exported with Playwright driving a local headless Microsoft Edge browser. It loaded the local preview server, waited for `document.fonts.ready`, and called `page.pdf()` with `preferCSSPageSize: true`, `scale: 1`, `displayHeaderFooter: false`, and `printBackground: true`. The browser rendered the site's HTML/CSS directly, preserving selectable text and links. Playwright was used as a verification tool; `npm run build` continues to generate the static website, and PDF export is performed separately.
 
 ### Troubleshooting
 

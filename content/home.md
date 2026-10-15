@@ -1,0 +1,8 @@
+- education
+- skills
+- projects
+- work-experience
+- honors-and-awards
+- publications
+- extracurricular-activities
+- notes

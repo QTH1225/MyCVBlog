@@ -1,14 +1,29 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { readFile, mkdtemp, mkdir, writeFile, rm, cp } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseDocument, parseRecord, parseEducation, parseSkills, parseAwards, parsePublications, loadSiteContent } from './content.mjs';
+import { parseDocument, parseRecord, parseEducation, parseSkills, parseAwards, parsePublications, parseHomeOrder, loadSiteContent } from './content.mjs';
 import { renderMarkdown } from './notes.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const relativeLink = (page, target) => path.posix.relative(path.posix.dirname(page), target);
+const run = promisify(execFile);
+
+test('homepage section order accepts moving complete Markdown list lines', async () => {
+  const source = await readFile(path.join(root, 'content/home.md'), 'utf8');
+  const current = parseHomeOrder(source);
+  const reordered = ['publications', ...current.filter(id => id !== 'publications')];
+  assert.deepEqual(parseHomeOrder('\uFEFF' + reordered.map(id => `- ${id}`).join('\r\n\r\n')), reordered);
+  assert.throws(() => parseHomeOrder(source + '\n- skills'), /content\/home.md: Duplicate homepage section "skills"/);
+  assert.throws(() => parseHomeOrder(source.replace('- skills', '- skill')), /content\/home.md: Unknown homepage section "skill"/);
+  assert.throws(() => parseHomeOrder(source.replace('- skills', '')), /content\/home.md: Missing homepage sections: skills/);
+  assert.throws(() => parseHomeOrder(''), /Missing homepage sections/);
+  assert.throws(() => parseHomeOrder(source.replace('- skills', '  - skills')), /Line \d+: use one section per line/);
+});
 
 test('record summary is separated without treating fenced headings as sections', () => {
   const record = parseRecord('---\r\ntitle: "Test: Project"\r\norder: 2\r\n---\r\n\r\n## Summary\r\n\r\n- A **bold** point.\r\n\r\n```markdown\r\n## Not a section\r\n```\r\n\r\n## RESULTS\r\n\r\nDetails.', 'test-project.md', 'projects');
@@ -68,6 +83,7 @@ test('adding, editing, ordering and removing Markdown records needs no code chan
     for (const category of ['projects', 'work-experience', 'extracurricular-activities']) await mkdir(path.join(directory, category));
     for (const file of ['education.md', 'skills.md', 'honors-and-awards.md', 'publications.md']) await writeFile(path.join(directory, file), '');
     await writeFile(path.join(directory, 'profile.md'), '---\nname: Anonymous\n---');
+    await cp(path.join(root, 'content/home.md'), path.join(directory, 'home.md'));
     const make = (title, order) => `---\ntitle: ${title}\norder: ${order}\n---\n## Summary\n- A summary.\n## DETAILS\nA detail paragraph.`;
     const first = path.join(directory, 'projects/first.md');
     const second = path.join(directory, 'projects/second.md');
@@ -80,6 +96,47 @@ test('adding, editing, ordering and removing Markdown records needs no code chan
     assert.equal((await loadSiteContent(directory)).projects.length, 1);
   } finally {
     if (!directory.startsWith(base + path.sep) || !path.basename(directory).startsWith('cvblog-content-')) throw new Error('Unsafe test cleanup path');
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('real builds follow home.md order and reject errors without replacing the last working output', async () => {
+  const base = path.resolve(tmpdir());
+  const directory = await mkdtemp(path.join(base, 'cvblog-home-'));
+  try {
+    for (const entry of ['scripts', 'src', 'content', 'notes', 'assets', 'package.json']) {
+      await cp(path.join(root, entry), path.join(directory, entry), { recursive: true });
+    }
+    await cp(path.join(root, 'node_modules'), path.join(directory, 'node_modules'), { recursive: true });
+    const homeFile = path.join(directory, 'content/home.md');
+    const original = await readFile(homeFile, 'utf8');
+    const build = () => run(process.execPath, [path.join(directory, 'scripts/build.mjs')], { cwd: directory });
+    const check = () => run(process.execPath, [path.join(directory, 'scripts/check.mjs')], { cwd: directory });
+    const readHome = () => readFile(path.join(directory, 'dist/index.html'), 'utf8');
+    const sectionOrder = html => [...html.matchAll(/<section data-home-section="([^"]+)"/g)].map(match => match[1]);
+    await build();
+    await check();
+    assert.deepEqual(sectionOrder(await readHome()), parseHomeOrder(original));
+    const category = await readFile(path.join(directory, 'dist/projects/index.html'), 'utf8');
+    const reordered = ['notes', 'publications', 'skills', ...parseHomeOrder(original).filter(id => !['notes', 'publications', 'skills'].includes(id))];
+    await writeFile(homeFile, reordered.map(id => `- ${id}`).join('\n') + '\n');
+    await build();
+    await check();
+    const workingHome = await readHome();
+    assert.deepEqual(sectionOrder(workingHome), reordered);
+    assert.match(workingHome, /data-home-section="notes" class="resume-notes"/);
+    assert.equal(await readFile(path.join(directory, 'dist/projects/index.html'), 'utf8'), category);
+    for (const [source, error] of [
+      [original + '\n- skills', /Duplicate homepage section/],
+      [original.replace('- skills', '- skill'), /Unknown homepage section/],
+      [original.replace('- skills', ''), /Missing homepage sections/],
+    ]) {
+      await writeFile(homeFile, source);
+      await assert.rejects(build(), error);
+      assert.equal(await readHome(), workingHome);
+    }
+  } finally {
+    if (!directory.startsWith(base + path.sep) || !path.basename(directory).startsWith('cvblog-home-')) throw new Error('Unsafe test cleanup path');
     await rm(directory, { recursive: true, force: true });
   }
 });

@@ -19,6 +19,7 @@
 
 - **直接编辑 Markdown**：履历、项目、经历、活动和论文从文档读取，不用修改 JavaScript 数组，也不需要脚本改写代码。
 - **简历式布局**：Charter 衬线字体、蓝灰色标题、细横线、标题加粗及日期右对齐，没有顶部标签栏。分类及详情页保留统一个人信息页眉，返回入口统一位于标题右侧；详情页返回所属分类，分类页返回简历主页。
+- **手机端排版**：窄屏联系方式分成等宽两列，活动日期在手机上另起一行并靠左。对支持该设置的浏览器关闭数字和日期自动识别，显式设置的联系方式链接仍可点击。
 - **摘要与正文分开**：项目文档的 `## Summary` 自动用于主页，其余章节进入详情页。课外活动主页仅显示角色、社团和右侧日期。
 - **图片和公式**：项目正文与笔记都支持 Markdown 图片、KaTeX 公式、代码、表格和引用。公式在构建时生成，字体随网站打包。
 - **静态部署**：生成普通 HTML/CSS 和资源文件，阅读无需前端框架或在线 CDN，支持手机布局、离线查看和打印。
@@ -53,6 +54,7 @@ npm run dev
 
 | 内容 | 维护文件 |
 | --- | --- |
+| 主页栏目顺序 | [content/home.md](content/home.md) |
 | 姓名、电话、邮箱和网站链接 | [content/profile.md](content/profile.md) |
 | 教育背景、课程 | [content/education.md](content/education.md) |
 | 技能 | [content/skills.md](content/skills.md) |
@@ -64,6 +66,23 @@ npm run dev
 | 笔记 | `notes/`，每篇一份 Markdown |
 
 **不要直接修改 `dist/`**，每次构建都会替换整个生成目录，清理旧页面、笔记原文和资源。请将内容及附件保存在对应的源目录中。
+
+### 主页栏目顺序
+
+编辑 [content/home.md](content/home.md)，上下移动完整的一行，即可调整主页各栏目的先后顺序：
+
+```markdown
+- education
+- skills
+- projects
+- work-experience
+- honors-and-awards
+- publications
+- extracurricular-activities
+- notes
+```
+
+例如，把 `- publications` 移到 `- skills` 前面，论文栏目就会排在技能之前。八个标识必须各出现一次，保留上面的英文名称，可以插入空行。重复、拼错或漏写栏目会使构建停止，报错会指明 `content/home.md`，并保留上一次成功生成的网站。更新本次构建脚本后，请重启一次预览服务；之后保存 `home.md` 会自动构建，刷新浏览器即可查看。这里控制的是主页栏目顺序；项目、工作经历、课外活动各篇文件中的 `order` 控制对应栏目内部的条目顺序。分类与详情页布局不受影响，主页 NOTES 无论放在哪里，打印时仍会隐藏。
 
 ## 项目、经历和活动
 
@@ -223,7 +242,8 @@ $$
 | --- | --- |
 | 颜色、字体、字号、宽度、留白、手机和打印布局 | `src/styles.css` |
 | 栏目标题、View all 和返回文字 | `src/labels.mjs` |
-| 栏目顺序、主页预览数量、页眉和页脚结构 | `scripts/build.mjs` |
+| 主页栏目顺序 | `content/home.md` |
+| 主页预览数量、页眉和页脚结构 | `scripts/build.mjs` |
 | 网站图标 | `assets/favicon.svg` |
 
 日常内容修改不涉及以上代码。若需要改变主页预览数量，奖项在 `honors.slice(0, 5)`、`awards.slice(0, 5)` 中调整，笔记在 `notes.slice(0, 5)` 中调整。
@@ -241,6 +261,14 @@ npm run check
 将 **`dist/` 内全部文件**部署至静态托管目录，保留 `assets/`、栏目和笔记目录的层级。使用 GitHub Pages 时也要包含生成的 `.nojekyll` 文件，使 `notes/_sources/` 等目录正常提供访问。站内使用相对链接，可部署到域名根目录或子目录。线上不需要 Node.js。也可直接打开 `dist/index.html` 离线阅读，浏览器打印可另存为 PDF。
 
 Charter 字体本地加载，楷体作为系统字体回退，未随项目分发。KaTeX 字体及许可随输出打包。网站为文件维护的静态博客，没有在线编辑器、登录、数据库或评论功能。发布前请确认内容和附件适合公开，尤其是可下载的笔记原文。
+
+### 打印为 PDF
+
+打开主页，按 **Ctrl+P**（macOS 为 **Cmd+P**），选择**另存为 PDF**。使用 **A4**、**100% 缩放**和默认页边距，关闭浏览器附加的页眉和页脚。打印样式保留本地 Charter 字体，使用深色文字，并隐藏导航、View all 链接、网站页脚及主页 NOTES 栏目。其余打印内容与当前页面一致，不会自动展开栏目完整列表，页数随内容变化。详情页（包括单篇笔记）仍可以单独打印。
+
+打印排版由 `src/styles.css` 中的 `@page` 和 `@media print` 控制：A4 纸张、14 mm 页边距、日期右对齐，并通过分页规则尽量让标题与正文、奖项列表、图片与说明保持在同一页。较长的代码行在打印时自动换行，移动端排版规则仅作用于屏幕。主页 NOTES 栏目在 `scripts/build.mjs` 中使用 `class="resume-notes"` 标记，仅在打印时隐藏，浏览网页时仍正常显示。
+
+本次 PDF 预览使用 Playwright 驱动本机无界面 Microsoft Edge 导出：加载本地预览服务，等待 `document.fonts.ready`，再调用 `page.pdf()`，参数为 `preferCSSPageSize: true`、`scale: 1`、`displayHeaderFooter: false` 和 `printBackground: true`。PDF 由浏览器直接渲染网站的 HTML/CSS，保留可选中文字和链接。Playwright 用于本次效果验证；`npm run build` 仍负责生成静态网站，PDF 单独导出。
 
 ### 常见问题
 

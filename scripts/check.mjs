@@ -1,6 +1,7 @@
 import { readFile, stat, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseHomeOrder } from './content.mjs';
 
 const root = fileURLToPath(new URL('../dist/', import.meta.url));
 const pages = JSON.parse(await readFile(path.join(root, 'pages.json'), 'utf8'));
@@ -10,6 +11,7 @@ for (const page of pages) {
   const file = path.join(root, page);
   const html = await readFile(file, 'utf8');
   if (!html.includes('<header class="identity">') || !html.includes('id="main"')) throw new Error(`Missing shared page layout: ${page}`);
+  if (!html.includes('<meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">')) throw new Error(`Missing mobile auto-link detection settings: ${page}`);
   if (page.startsWith('zh/') || !html.includes('<html lang="en">')) throw new Error(`Incorrect page language: ${page}`);
   if (html.includes('hreflang=') || html.includes('language-switch') || /\p{Script=Han}/u.test(html)) throw new Error(`Non-English content or language controls remain: ${page}`);
   if (page.split('/').length === 3) {
@@ -60,10 +62,11 @@ if (noteSources.sort().join('|') !== expectedSources.sort().join('|')) throw new
 const demo = await readFile(path.join(root, 'notes/media-math-test/index.html'), 'utf8');
 if (!demo.includes('katex-mathml') || !demo.includes('katex-display') || !demo.includes('note-demo.png') || !demo.includes('note-demo.svg') || demo.includes('katex-error')) throw new Error('Note media/math rendering failed');
 const home = await readFile(path.join(root, 'index.html'), 'utf8');
-const headings = [...home.matchAll(/<h2 class="section-heading[^>]*><span>([^<]+)<\/span>/g)].map(match => match[1]);
-const activityIndex = headings.indexOf('EXTRACURRICULAR ACTIVITIES');
-if (activityIndex < 0 || headings[activityIndex + 1] !== 'NOTES') throw new Error('Activities must appear immediately above notes');
+const expectedOrder = parseHomeOrder(await readFile(new URL('../content/home.md', import.meta.url), 'utf8'));
+const actualOrder = [...home.matchAll(/<section data-home-section="([^"]+)"/g)].map(match => match[1]);
+if (actualOrder.join('|') !== expectedOrder.join('|')) throw new Error('Homepage sections must match the order in content/home.md; rebuild the website');
+if (!home.includes('data-home-section="notes" class="resume-notes"')) throw new Error('Homepage notes must retain their print-hidden class');
 const notesIndex = await readFile(path.join(root, 'notes/index.html'), 'utf8');
 const noteCount = html => [...html.matchAll(/<article class="note-entry note-entry-compact">/g)].length;
 if (noteCount(home) !== Math.min(5, noteCount(notesIndex))) throw new Error('Homepage notes must preview at most five entries');
-console.log(`Checked ${pages.length} English pages, ${references} local references, ${anchors} anchors, ${fontReferences} font references, category return links, five-note preview, clean output, English-only content, and note rendering.`);
+console.log(`Checked ${pages.length} English pages, ${references} local references, ${anchors} anchors, ${fontReferences} font references, configured homepage order, category return links, five-note preview, clean output, English-only content, and note rendering.`);

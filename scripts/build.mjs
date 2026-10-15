@@ -27,7 +27,7 @@ function validateRecords(records, category) {
 }
 
 function buildSite(content, notes) {
-  const { profile, education, skills, projects, workExperience, activities, honors, awards, publications } = content;
+  const { profile, homeOrder, education, skills, projects, workExperience, activities, honors, awards, publications } = content;
   const t = labels;
   const addPage = (route, html) => allPages.set(route, html);
   for (const [category, records] of Object.entries({ projects, workExperience, activities, publications })) validateRecords(records, category);
@@ -48,6 +48,7 @@ function buildSite(content, notes) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
   <meta name="description" content="${escape(`${title} — ${profile.name} · ${t.siteDescription}`)}">
   <meta name="theme-color" content="#ffffff">
   <title>${escape(title)} | ${escape(profile.name)}</title>
@@ -111,15 +112,17 @@ function buildSite(content, notes) {
   }
 
   const home = 'index.html';
-  addPage(home, shell(home, t.resume, 'resume', `
-    <section>${heading(t.education)}${educationContent()}</section>
-    <section class="skills">${heading(t.skills)}${skills.map(([label, value]) => `<p><strong>${escape(label)}:</strong> ${escape(value).replace('LaTeX', '<span class="latex" aria-label="LaTeX">L<span class="a">A</span>T<span class="e">E</span>X</span>')}</p>`).join('')}</section>
-    <section>${heading(t.projects, home, 'projects/index.html')}${projects.map(item => recordContent(item, home, 'projects')).join('') || `<p class="empty">${escape(t.emptyProjects)}</p>`}</section>
-    <section>${heading(t.work, home, 'work-experience/index.html')}${workExperience.map(item => recordContent(item, home, 'work-experience')).join('') || `<p class="empty">${escape(t.emptyWork)}</p>`}</section>
-    <section>${heading(t.awards, home, 'honors-and-awards/index.html')}${awardsContent(honors.slice(0, 5), awards.slice(0, 5))}</section>
-    <section>${heading(t.publications, home, 'publications/index.html')}${publicationContent(home)}</section>
-    <section>${heading(t.activities, home, 'extracurricular-activities/index.html')}${activityPreview()}</section>
-    <section>${heading(t.notes, home, 'notes/index.html')}${noteList(home, notes.slice(0, 5))}</section>`));
+  const homeContent = {
+    education: `<section data-home-section="education">${heading(t.education)}${educationContent()}</section>`,
+    skills: `<section data-home-section="skills" class="skills">${heading(t.skills)}${skills.map(([label, value]) => `<p><strong>${escape(label)}:</strong> ${escape(value).replace('LaTeX', '<span class="latex" aria-label="LaTeX">L<span class="a">A</span>T<span class="e">E</span>X</span>')}</p>`).join('')}</section>`,
+    projects: `<section data-home-section="projects">${heading(t.projects, home, 'projects/index.html')}${projects.map(item => recordContent(item, home, 'projects')).join('') || `<p class="empty">${escape(t.emptyProjects)}</p>`}</section>`,
+    'work-experience': `<section data-home-section="work-experience">${heading(t.work, home, 'work-experience/index.html')}${workExperience.map(item => recordContent(item, home, 'work-experience')).join('') || `<p class="empty">${escape(t.emptyWork)}</p>`}</section>`,
+    'honors-and-awards': `<section data-home-section="honors-and-awards">${heading(t.awards, home, 'honors-and-awards/index.html')}${awardsContent(honors.slice(0, 5), awards.slice(0, 5))}</section>`,
+    publications: `<section data-home-section="publications">${heading(t.publications, home, 'publications/index.html')}${publicationContent(home)}</section>`,
+    'extracurricular-activities': `<section data-home-section="extracurricular-activities">${heading(t.activities, home, 'extracurricular-activities/index.html')}${activityPreview()}</section>`,
+    notes: `<section data-home-section="notes" class="resume-notes">${heading(t.notes, home, 'notes/index.html')}${noteList(home, notes.slice(0, 5))}</section>`,
+  };
+  addPage(home, shell(home, t.resume, 'resume', `\n    ${homeOrder.map(id => homeContent[id]).join('\n    ')}`));
 
   for (const [category, label, active, records, empty, detailLabel] of [
     ['projects', t.projectList, 'projects', projects, t.emptyProjects, t.projectNotes],

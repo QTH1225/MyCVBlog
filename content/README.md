@@ -4,6 +4,7 @@
 
 | 要修改的内容 | 文件 |
 | --- | --- |
+| 主页栏目顺序 | [home.md](home.md) |
 | 姓名、联系方式 | [profile.md](profile.md) |
 | 教育背景与课程 | [education.md](education.md) |
 | 技能 | [skills.md](skills.md) |
@@ -13,6 +14,8 @@
 | 工作经历 | `work-experience/` 中每段经历一份 `.md` |
 | 课外活动 | `extracurricular-activities/` 中每项活动一份 `.md` |
 | 笔记 | 项目根目录的 `notes/` 中每篇一份 `.md` |
+
+要调整 SKILLS、PUBLICATIONS 等整个栏目的位置，请编辑 [home.md](home.md)，上下移动对应的 `- skills`、`- publications` 等完整行。八个英文标识必须各保留一次；重复、拼错或漏写会停止构建并报告文件名。当前顺序为教育、技能、项目、工作经历、荣誉奖项、论文、课外活动、笔记。栏目内条目排序仍由各篇文件的 `order` 控制。主页 NOTES 的打印隐藏规则不受栏目位置影响。
 
 可以先试改 [导电混凝土项目](projects/conductive-concrete-example.md)：
 

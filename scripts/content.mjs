@@ -8,6 +8,24 @@ const normalize = text => text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
 const fail = (file, message) => { throw new Error(`${file}: ${message}`); };
 const plain = text => (md.parseInline(text, {})[0]?.children || []).map(token => token.type === 'softbreak' ? ' ' : token.content).join('');
 
+const homeSections = ['education', 'skills', 'projects', 'work-experience', 'honors-and-awards', 'publications', 'extracurricular-activities', 'notes'];
+
+export function parseHomeOrder(body, file = 'content/home.md') {
+  const order = [];
+  for (const [index, line] of normalize(body).split('\n').entries()) {
+    if (!line.trim()) continue;
+    const match = line.match(/^-\s+([a-z0-9]+(?:-[a-z0-9]+)*)\s*$/);
+    if (!match) fail(file, `Line ${index + 1}: use one section per line, for example - skills`);
+    const id = match[1];
+    if (!homeSections.includes(id)) fail(file, `Unknown homepage section "${id}"; expected: ${homeSections.join(', ')}`);
+    if (order.includes(id)) fail(file, `Duplicate homepage section "${id}"`);
+    order.push(id);
+  }
+  const missing = homeSections.filter(id => !order.includes(id));
+  if (missing.length) fail(file, `Missing homepage sections: ${missing.join(', ')}; include every section exactly once`);
+  return order;
+}
+
 // Intentionally supports single-line key/value fields, not arbitrary YAML.
 export function parseFields(text, allowed, required, file) {
   const values = {};
@@ -143,6 +161,7 @@ export async function loadSiteContent(directory) {
     return items.sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
   };
   return { profile,
+    homeOrder: parseHomeOrder(await read('home.md')),
     education: parseEducation(await read('education.md')),
     skills: parseSkills(await read('skills.md')),
     ...parseAwards(await read('honors-and-awards.md')),
