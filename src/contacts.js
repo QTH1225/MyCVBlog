@@ -7,6 +7,7 @@
   const narrow = matchMedia('screen and (max-width: 760px)');
   let frame;
   let lastWidth = -1;
+  let lastGroups = '';
 
   function measure(node) {
     const probe = node.cloneNode(true);
@@ -58,6 +59,9 @@
       groups = split(0, rows)?.counts;
       if (groups) break;
     }
+    const signature = groups.join(',');
+    if (signature === lastGroups) return;
+    lastGroups = signature;
     const fragment = document.createDocumentFragment();
     let start = 0;
     for (const count of groups) {

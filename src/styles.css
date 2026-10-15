@@ -41,6 +41,9 @@
 }
 
 * { box-sizing: border-box; }
+/* Keep the previous page visible while a same-origin document is replaced. */
+@view-transition { navigation: auto; }
+::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 120ms; }
 html { scroll-behavior: smooth; }
 body { margin: 0; line-height: 1.35; }
 a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -202,6 +205,7 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  @view-transition { navigation: none; }
 }
 /* Use the same content and bundled fonts for an A4 résumé export. */
 @page { size: A4; margin: 14mm; }

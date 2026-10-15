@@ -22,6 +22,7 @@ Adapted from **Vaishanth R**'s [Resume Professional Template - Software Engineer
 - **Separate previews and details.** A project's `## Summary` section supplies its homepage preview; the remaining sections form the detail page. The activity preview shows only the role, club, and date.
 - **Images and mathematics.** Project bodies and notes support Markdown images, KaTeX equations, code, tables, and quotations. Equations are rendered at build time and fonts are bundled locally.
 - **Static output.** Generate plain HTML/CSS and assets for static hosting, offline reading, mobile layouts, and printing, without a frontend framework or an online CDN at reading time.
+- **Page transitions.** An early light background and preloaded regular, bold, and italic fonts reduce loading flashes. Supporting browsers use a short native transition between same-origin pages; reduced-motion settings disable it. Contact rows are only rebuilt when their grouping changes.
 - **Validation.** Check metadata, filenames, local links, fonts, English pages, and sample mathematics. Content parser tests are included.
 
 The sample identity uses an anonymous name, masked phone number, and example links. Some projects, roles, publications, and activities are illustrative entries. Replace them with your own public information before using the site as a personal résumé.

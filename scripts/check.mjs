@@ -11,6 +11,7 @@ for (const page of pages) {
   const file = path.join(root, page);
   const html = await readFile(file, 'utf8');
   if (!html.includes('<header class="identity">') || !html.includes('id="main"')) throw new Error(`Missing shared page layout: ${page}`);
+  if (!html.includes('<meta name="color-scheme" content="light">') || !html.includes('<style>html{color-scheme:light;background:')) throw new Error(`Missing early light background: ${page}`);
   if (!html.includes('<meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">')) throw new Error(`Missing mobile auto-link detection settings: ${page}`);
   if (page.startsWith('zh/') || !html.includes('<html lang="en">')) throw new Error(`Incorrect page language: ${page}`);
   if (html.includes('hreflang=') || html.includes('language-switch') || /\p{Script=Han}/u.test(html)) throw new Error(`Non-English content or language controls remain: ${page}`);

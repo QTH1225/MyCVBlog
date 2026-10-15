@@ -48,6 +48,8 @@ function buildSite(content, notes) {
 <html lang="${t.htmlLang}">
 <head>
   <meta charset="utf-8">
+  <meta name="color-scheme" content="light">
+  <style>html{color-scheme:light;background:#f6f5f3}body{margin:0}@media screen and (max-width:480px){html{background:#fff}}@media print{html{background:#fff}}</style>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
   <meta name="description" content="${escape(`${title} — ${profile.name} · ${t.siteDescription}`)}">
@@ -55,6 +57,8 @@ function buildSite(content, notes) {
   <title>${escape(title)} | ${escape(profile.name)}</title>
   <link rel="icon" href="${link('assets/favicon.svg')}" type="image/svg+xml">
   <link rel="preload" href="${link('assets/fonts/charter-regular.woff2')}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="${link('assets/fonts/charter-bold.woff2')}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="${link('assets/fonts/charter-italic.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${link('assets/styles.css')}">
   <script src="${link('assets/contacts.js')}" defer></script>
   ${active === 'notes' || body.includes('katex-mathml') ? `<link rel="stylesheet" href="${link('assets/katex/katex.min.css')}">` : ''}
