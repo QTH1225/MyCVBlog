@@ -22,4 +22,4 @@ MyCVBlog 由 Anonymous（匿名作者）改编自 **Vaishanth R** 的 **Resume P
 - 其他 npm 依赖：参见源码发行版中各软件包的许可证。
 - 单独标注的第三方图片、引用、附件及其他材料：遵循各自授权。
 
-本说明及其[英文版本](ATTRIBUTION.md) 会随生成网站分发，路径分别为 `assets/ATTRIBUTION.zh-CN.md` 和 `assets/ATTRIBUTION.md`。再分发网站时请保留两份说明。源码发行版另有 README.md、README.zh-CN.md 和 LICENSE.md，提供项目维护及许可信息。
+本说明及其[英文版本](ATTRIBUTION.md) 会随生成网站分发，路径分别为 `assets/ATTRIBUTION.zh-CN.md` 和 `assets/ATTRIBUTION.md`。再分发网站时请保留两份说明。源码发行版另有 README.md、README.zh-CN.md、LICENSE.md 和 LICENSE.zh-CN.md，提供项目维护及许可信息。

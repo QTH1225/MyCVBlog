@@ -9,7 +9,6 @@
 ![Markdown](https://img.shields.io/badge/Markdown-Content-orange.svg)
 [![GitHub Downloads](https://img.shields.io/github/downloads/QTH1225/MyCVBlog/total?style=flat&color=blue&label=Downloads)](https://github.com/QTH1225/MyCVBlog/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/QTH1225/MyCVBlog?style=flat&color=red&label=Stars)](https://github.com/QTH1225/MyCVBlog/stargazers)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/QTH1225/MyCVBlog?style=flat&color=blue&label=Last%20Commit)](https://github.com/QTH1225/MyCVBlog/commits)
 
 A static personal blog with a résumé homepage, projects, work experience, honors and awards, publications, extracurricular activities, and notes. The homepage keeps a compact résumé layout: use **View all →** to open a category, then select an entry for its detail page. The website itself is English-only; this documentation is available in English and Chinese.
 
@@ -281,7 +280,7 @@ Original material retains its original license. This notice does not replace the
 - markdown-it, markdown-it-texmath, and other dependencies retain their respective package licenses.
 - Separately identified third-party images, quotations, and attachments follow their own terms and are not automatically covered by this project's license.
 
-See [LICENSE.md](LICENSE.md) for the project notice. The [English attribution notice](assets/ATTRIBUTION.md) and its [Chinese version](assets/ATTRIBUTION.zh-CN.md) include language-switch links and are copied to `dist/assets/` with the website. Preserve the README files, both attribution notices, LICENSE, and third-party notices when redistributing the source.
+See [LICENSE.md](LICENSE.md) for the English project notice or its [Chinese version](LICENSE.zh-CN.md); the two files link to each other. The [English attribution notice](assets/ATTRIBUTION.md) and its [Chinese version](assets/ATTRIBUTION.zh-CN.md) also include language-switch links and are copied to `dist/assets/` with the website. Preserve the README files, both license and attribution notices, and third-party notices when redistributing the source.
 
 ## Star History
 

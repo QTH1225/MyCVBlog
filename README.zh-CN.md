@@ -4,16 +4,16 @@
 
 <!-- 项目徽章 -->
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](package.json)
-[![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-blue.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-blue.svg)](LICENSE.zh-CN.md)
 ![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A522.12.0-green.svg)
 ![Markdown](https://img.shields.io/badge/Markdown-Content-orange.svg)
 [![GitHub Downloads](https://img.shields.io/github/downloads/QTH1225/MyCVBlog/total?style=flat&color=blue&label=Downloads)](https://github.com/QTH1225/MyCVBlog/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/QTH1225/MyCVBlog?style=flat&color=red&label=Stars)](https://github.com/QTH1225/MyCVBlog/stargazers)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/QTH1225/MyCVBlog?style=flat&color=blue&label=Last%20Commit)](https://github.com/QTH1225/MyCVBlog/commits)
+
 
 以简历为主页的静态博客，提供项目、工作经历、荣誉奖项、论文、课外活动和笔记。主页保持紧凑的简历排版，通过 **View all →** 查看分类列表，再进入详情页。网站统一使用英文，项目说明文档提供中英双语。
 
-本项目改编自 **Vaishanth R** 的 [Resume Professional Template - Software Engineer](https://www.overleaf.com/latex/templates/resume-professional-template-software-engineer/ttwtyxskrcsz)。原模板的 Overleaf 页面标注为 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)，本项目的新增及改编贡献采用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。原作和第三方许可继续适用，详见文末及 [LICENSE.md](LICENSE.md)。
+本项目改编自 **Vaishanth R** 的 [Resume Professional Template - Software Engineer](https://www.overleaf.com/latex/templates/resume-professional-template-software-engineer/ttwtyxskrcsz)。原模板的 Overleaf 页面标注为 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)，本项目的新增及改编贡献采用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。原作和第三方许可继续适用，详见文末及[中文许可说明](LICENSE.zh-CN.md)（[英文主文件](LICENSE.md)）。
 
 ## 项目特点
 
@@ -281,7 +281,7 @@ Charter 字体本地加载，楷体作为系统字体回退，未随项目分发
 - markdown-it、markdown-it-texmath 及其他依赖按各包随附许可使用。
 - 单独标注的第三方图片、引用和附件遵循其各自授权，不自动纳入本项目许可。
 
-完整声明见 [LICENSE.md](LICENSE.md)。来源及署名说明提供[中文版](assets/ATTRIBUTION.zh-CN.md)和[英文版](assets/ATTRIBUTION.md)，标题下可互相切换，两份文件均随网站复制到 `dist/assets/`；分发源码时请保留 README、两份署名说明、LICENSE 和第三方许可。
+许可声明提供[英文主文件](LICENSE.md)和[中文版](LICENSE.zh-CN.md)，标题下可互相切换。来源及署名说明也提供[中文版](assets/ATTRIBUTION.zh-CN.md)和[英文版](assets/ATTRIBUTION.md)，两份文件均随网站复制到 `dist/assets/`；分发源码时请保留 README、两份许可及署名说明和第三方许可。
 
 ## Star History
 

@@ -22,4 +22,4 @@ Third-party materials retain their own licenses:
 - Other npm dependencies: see their respective package licenses in the source distribution.
 - Separately identified third-party images, quotations, attachments, and other materials: their respective terms apply.
 
-This notice and its [Chinese version](ATTRIBUTION.zh-CN.md) are bundled with the generated website as `assets/ATTRIBUTION.md` and `assets/ATTRIBUTION.zh-CN.md`. Preserve both when redistributing the website. The source distribution includes additional documentation in README.md, README.zh-CN.md, and LICENSE.md.
+This notice and its [Chinese version](ATTRIBUTION.zh-CN.md) are bundled with the generated website as `assets/ATTRIBUTION.md` and `assets/ATTRIBUTION.zh-CN.md`. Preserve both when redistributing the website. The source distribution includes additional documentation in README.md, README.zh-CN.md, LICENSE.md, and LICENSE.zh-CN.md.
