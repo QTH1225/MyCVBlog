@@ -5,11 +5,13 @@ summary: Create a Markdown note, add a title and date, insert images, and genera
 tags: Guide, Markdown
 ---
 
-Notes live in the project's `notes` folder. Each note is a separate Markdown file.
+Notes live in `notes`. Each note is a separate Markdown file.
+
+Résumé content is also maintained in Markdown: projects live in `content/projects`, work experience in `content/work-experience`, and activities in `content/extracurricular-activities`. Copy the matching template from `templates` to add an entry. A record's `## Summary` section appears in résumé lists, while the remaining sections appear on its detail page.
 
 ## 1. Create a Note
 
-Copy `templates/note.md` into the `notes` folder and rename it, for example to `my-first-note.md`. Use lowercase letters, numbers, and hyphens in the filename; it also determines the note's page address.
+Copy `templates/note.md` into `notes`, for example as `my-first-note.md`. Use lowercase letters, numbers, and hyphens in the filename. Each note needs only one English file.
 
 Start the note with this metadata:
 

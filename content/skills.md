@@ -1,0 +1,2 @@
+- **Programming Languages:** Python, MATLAB, LaTeX
+- **Professional Interests:** Engineering, simulation, and technical writing

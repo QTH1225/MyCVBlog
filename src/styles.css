@@ -70,7 +70,8 @@ section { margin-top: 21px; }
 .section-heading a { color: inherit; text-decoration: none; }
 .section-heading a:hover { text-decoration: underline; }
 .section-heading.linked { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.section-heading .section-action { color: var(--link); font-size: 12px; font-weight: 400; white-space: nowrap; }
+.section-heading .section-action, .detail-heading .section-action { color: var(--link); font-size: 12px; font-weight: 400; white-space: nowrap; text-decoration: none; }
+.section-action:is(:hover, :focus-visible) { text-decoration: underline; }
 .entry + .entry { margin-top: 12px; }
 .entry-top, .entry-sub { display: flex; justify-content: space-between; gap: 10px 20px; align-items: baseline; }
 .entry-title { margin: 0; font-size: 17px; line-height: 1.25; font-weight: 700; }
@@ -89,6 +90,9 @@ p { margin: 7px 0; }
 .resume-list { padding-left: 16px; margin: 6px 0 0; }
 .resume-list li { padding-left: 1px; margin: 4px 0; }
 .resume-list li::marker { font-size: 11px; }
+.activity-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 20px; }
+.activity-description { min-width: 0; }
+.activity-row .dates { margin-left: auto; font-style: italic; }
 .empty { font-style: italic; color: var(--muted); margin: 6px 0; }
 .minor-heading { margin: 10px 0 2px; font-size: 15px; }
 .award-list { margin: 3px 0; }
@@ -103,6 +107,9 @@ p { margin: 7px 0; }
 .breadcrumb a:hover { color: var(--link); text-decoration: underline; }
 .breadcrumb span { margin: 0 7px; }
 .detail-title { margin: 0 0 7px; font-size: 25px; line-height: 1.22; }
+.detail-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 20px; margin-bottom: 7px; }
+.detail-heading .detail-title { flex: 1 1 250px; min-width: 0; margin: 0; }
+.detail-heading .section-action { margin-left: auto; }
 .detail-subtitle { margin: 0 0 6px; font-size: 16px; font-style: italic; }
 .detail-meta { display: flex; flex-wrap: wrap; gap: 4px 18px; color: var(--muted); font-size: 14px; }
 .detail-body { margin-top: 24px; }
@@ -111,7 +118,6 @@ p { margin: 7px 0; }
 figure { margin: 18px 0; }
 figure img { display: block; width: 100%; height: auto; }
 figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: italic; }
-.return-link { margin-top: 30px; font-size: 14px; }
 .footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #ddd; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--muted); }
 .footer a { color: var(--muted); text-decoration: none; }
 .page-intro { margin-bottom: 20px; font-style: italic; color: var(--muted); }
@@ -152,6 +158,13 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
 .markdown-body .katex-display { margin: 0; }
 .markdown-body .katex-display > .katex { white-space: nowrap; }
 .markdown-body .katex .cjk_fallback { font-family: KaiTi, 'Kaiti SC', STKaiti, serif; }
+.record-markdown { line-height: 1.55; }
+.record-markdown p { margin: 7px 0; }
+.record-markdown .section-heading { margin: 25px 0 8px; padding-bottom: 3px; }
+.record-markdown > .section-heading:first-child { margin-top: 0; }
+.record-markdown ul { padding-left: 16px; margin: 6px 0 0; }
+.record-markdown li { padding-left: 1px; margin: 4px 0; }
+.record-markdown li::marker { font-size: 11px; }
 
 @media (max-width: 760px) {
   .paper { width: calc(100% - 28px); padding: 28px 24px; margin: 14px auto; }
@@ -189,7 +202,7 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
   .identity { margin-bottom: 16px; }
   .identity h1 { font-size: 25pt; }
   .contact { font-size: 10pt; }
-  .breadcrumb, .section-action, .return-link, .footer, .skip-link { display: none !important; }
+  .breadcrumb, .section-action, .footer, .skip-link { display: none !important; }
   section { margin-top: 13px; }
   .section-heading { font-size: 13pt; margin-bottom: 5px; break-after: avoid; }
   .entry-title { font-size: 12pt; }

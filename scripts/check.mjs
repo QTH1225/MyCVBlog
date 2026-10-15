@@ -1,21 +1,38 @@
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, stat, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../dist/', import.meta.url));
 const pages = JSON.parse(await readFile(path.join(root, 'pages.json'), 'utf8'));
 let references = 0;
+let anchors = 0;
 for (const page of pages) {
   const file = path.join(root, page);
   const html = await readFile(file, 'utf8');
   if (!html.includes('<header class="identity">') || !html.includes('id="main"')) throw new Error(`Missing shared page layout: ${page}`);
+  if (page.startsWith('zh/') || !html.includes('<html lang="en">')) throw new Error(`Incorrect page language: ${page}`);
+  if (html.includes('hreflang=') || html.includes('language-switch') || /\p{Script=Han}/u.test(html)) throw new Error(`Non-English content or language controls remain: ${page}`);
+  if (page.split('/').length === 3) {
+    const backHref = html.match(/<div class="detail-heading">[\s\S]*?<a class="section-action" href="([^"]+)"/u)?.[1];
+    const categoryPage = path.resolve(root, page.split('/')[0], 'index.html');
+    if (!backHref || path.resolve(path.dirname(file), backHref) !== categoryPage) throw new Error(`Detail heading must link back to its category: ${page}`);
+    if (html.includes('class="return-link"')) throw new Error(`Duplicate bottom return link: ${page}`);
+  }
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     const reference = match[1];
-    if (/^(https?:|mailto:|tel:|#)/.test(reference)) continue;
-    const target = path.resolve(path.dirname(file), reference.split('#')[0]);
-    if (!target.startsWith(root)) throw new Error(`Link escapes output: ${reference}`);
+    if (/^(https?:|mailto:|tel:)/i.test(reference)) continue;
+    const [pathname, fragment] = reference.split('#');
+    const target = pathname ? path.resolve(path.dirname(file), decodeURIComponent(pathname.split('?')[0])) : file;
+    const relative = path.relative(root, target);
+    if (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) throw new Error(`Link escapes output: ${reference}`);
     await stat(target).catch(() => { throw new Error(`Broken link in ${page}: ${reference}`); });
-    references++;
+    if (fragment && target.endsWith('.html')) {
+      const destination = target === file ? html : await readFile(target, 'utf8');
+      const ids = [...destination.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+      if (!ids.includes(decodeURIComponent(fragment))) throw new Error(`Missing anchor in ${page}: ${reference}`);
+      anchors++;
+    }
+    if (pathname) references++;
   }
 }
 let fontReferences = 0;
@@ -26,6 +43,27 @@ for (const stylesheet of ['assets/styles.css', 'assets/katex/katex.min.css']) {
     fontReferences++;
   }
 }
+const legacyDirectory = await stat(path.join(root, 'zh')).catch(error => { if (error.code !== 'ENOENT') throw error; });
+if (legacyDirectory) throw new Error('Remove the legacy dist/zh output before publishing.');
+await stat(path.join(root, '.nojekyll'));
+async function checkOutput(directory) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const file = path.join(directory, entry.name);
+    if (entry.isDirectory()) await checkOutput(file);
+    else if (entry.name.endsWith('.html') && !pages.includes(path.relative(root, file).split(path.sep).join('/'))) throw new Error(`Unlisted HTML page in output: ${file}`);
+  }
+}
+await checkOutput(root);
+const noteSources = (await readdir(path.join(root, 'notes/_sources'))).filter(file => file.endsWith('.md'));
+const expectedSources = pages.filter(page => /^notes\/[^/]+\/index\.html$/.test(page)).map(page => `${page.split('/')[1]}.md`);
+if (noteSources.sort().join('|') !== expectedSources.sort().join('|')) throw new Error('Note sources do not match the published note pages');
 const demo = await readFile(path.join(root, 'notes/media-math-test/index.html'), 'utf8');
 if (!demo.includes('katex-mathml') || !demo.includes('katex-display') || !demo.includes('note-demo.png') || !demo.includes('note-demo.svg') || demo.includes('katex-error')) throw new Error('Note media/math rendering failed');
-console.log(`Checked ${pages.length} pages, ${references} local references, ${fontReferences} font references, and note media/math rendering.`);
+const home = await readFile(path.join(root, 'index.html'), 'utf8');
+const headings = [...home.matchAll(/<h2 class="section-heading[^>]*><span>([^<]+)<\/span>/g)].map(match => match[1]);
+const activityIndex = headings.indexOf('EXTRACURRICULAR ACTIVITIES');
+if (activityIndex < 0 || headings[activityIndex + 1] !== 'NOTES') throw new Error('Activities must appear immediately above notes');
+const notesIndex = await readFile(path.join(root, 'notes/index.html'), 'utf8');
+const noteCount = html => [...html.matchAll(/<article class="note-entry note-entry-compact">/g)].length;
+if (noteCount(home) !== Math.min(5, noteCount(notesIndex))) throw new Error('Homepage notes must preview at most five entries');
+console.log(`Checked ${pages.length} English pages, ${references} local references, ${anchors} anchors, ${fontReferences} font references, category return links, five-note preview, clean output, English-only content, and note rendering.`);

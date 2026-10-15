@@ -20,7 +20,7 @@ const scheduleBuild = () => {
   clearTimeout(timer);
   timer = setTimeout(() => { try { build(); } catch (error) { console.error(error.message); } }, 150);
 };
-const watchers = ['src', 'notes', 'assets', 'assets/images'].map(directory => watch(path.join(root, directory), scheduleBuild));
+const watchers = ['src', 'notes', 'assets', 'assets/images', 'content', 'content/projects', 'content/work-experience', 'content/extracurricular-activities'].map(directory => watch(path.join(root, directory), scheduleBuild));
 
 const server = http.createServer(async (request, response) => {
   if (!['GET', 'HEAD'].includes(request.method)) { response.writeHead(405, { Allow: 'GET, HEAD' }); response.end(); return; }
@@ -39,7 +39,7 @@ const server = http.createServer(async (request, response) => {
   }
 });
 server.on('error', (error) => { console.error(error.message); watchers.forEach(watcher => watcher.close()); process.exitCode = 1; });
-server.listen(port, '127.0.0.1', () => console.log(`Local: http://127.0.0.1:${port}\nEdit src/, notes/*.md, or assets/images/, then refresh your browser.`));
+server.listen(port, '127.0.0.1', () => console.log(`Local: http://127.0.0.1:${port}\nEdit content/*.md, content category folders, notes/*.md, or assets/images/, then refresh your browser.`));
 function close() { watchers.forEach(watcher => watcher.close()); clearTimeout(timer); server.close(); }
 process.on('SIGINT', close);
 process.on('SIGTERM', close);

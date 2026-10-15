@@ -32,7 +32,7 @@ export async function loadNotes(directory) {
   return notes.sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id));
 }
 
-export function renderNote(note, notes, page, relativeLink) {
+export function renderMarkdown(note, notes, page, relativeLink, { contentsLabel = 'Contents' } = {}) {
   const md = new MarkdownIt({ html: false, linkify: false, typographer: false }).use(texmath, {
     engine: katex,
     delimiters: 'dollars',
@@ -91,6 +91,6 @@ export function renderNote(note, notes, page, relativeLink) {
   md.renderer.rules.table_close = () => '</table></div>\n';
   const html = md.render(note.body);
   if (html.includes('katex-error') || html.includes('KaTeX parse error')) throw new Error(`Invalid mathematical formula in ${note.id}`);
-  const toc = headings.length > 1 ? `<details class="note-toc"><summary>Contents</summary><ol>${headings.map(item => `<li><a href="#${escape(item.id)}">${escape(item.text)}</a></li>`).join('')}</ol></details>` : '';
+  const toc = headings.length > 1 ? `<details class="note-toc"><summary>${escape(contentsLabel)}</summary><ol>${headings.map(item => `<li><a href="#${escape(item.id)}">${escape(item.text)}</a></li>`).join('')}</ol></details>` : '';
   return { html, toc };
 }
