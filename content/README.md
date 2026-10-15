@@ -15,6 +15,8 @@
 | 课外活动 | `extracurricular-activities/` 中每项活动一份 `.md` |
 | 笔记 | 项目根目录的 `notes/` 中每篇一份 `.md` |
 
+联系方式在 [profile.md](profile.md) 中维护。删除某个联系方式字段的整行即可隐藏；要添加第五项或更多链接，在末尾的 `---` 后追加 `## Contacts`，下面每行写 `- [LinkedIn](https://www.linkedin.com/in/your-handle/)` 这样的 Markdown 链接。支持 HTTP(S)、`mailto:` 和 `tel:`。窄屏会根据文字宽度均衡换行，空间足够时三项同一行、四项 2＋2、五项 3＋2，末行居中。
+
 要调整 SKILLS、PUBLICATIONS 等整个栏目的位置，请编辑 [home.md](home.md)，上下移动对应的 `- skills`、`- publications` 等完整行。八个英文标识必须各保留一次；重复、拼错或漏写会停止构建并报告文件名。当前顺序为教育、技能、项目、工作经历、荣誉奖项、论文、课外活动、笔记。栏目内条目排序仍由各篇文件的 `order` 控制。主页 NOTES 的打印隐藏规则不受栏目位置影响。
 
 可以先试改 [导电混凝土项目](projects/conductive-concrete-example.md)：

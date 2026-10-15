@@ -6,12 +6,29 @@ import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseDocument, parseRecord, parseEducation, parseSkills, parseAwards, parsePublications, parseHomeOrder, loadSiteContent } from './content.mjs';
+import { parseDocument, parseRecord, parseEducation, parseSkills, parseAwards, parsePublications, parseHomeOrder, parseProfile, loadSiteContent } from './content.mjs';
 import { renderMarkdown } from './notes.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const relativeLink = (page, target) => path.posix.relative(path.posix.dirname(page), target);
 const run = promisify(execFile);
+
+test('profile keeps existing fields and accepts additional Markdown contact links', () => {
+  const header = '---\nname: Anonymous\nphone: +86 12345678900\nemail: hello@example.com\nwebsite: https://example.com/\ngithub: https://github.com/\n---\n';
+  assert.deepEqual(parseProfile(header).contacts, []);
+  const profile = parseProfile(header + '\n## Contacts\n\n- [LinkedIn](https://www.linkedin.com/)\n- [Another email](mailto:other@example.com)\n- [Office](tel:+8612345678900)');
+  assert.equal(profile.phone, '+86 12345678900');
+  assert.equal(profile.github.label, 'GitHub');
+  assert.deepEqual(profile.contacts, [
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/' },
+    { label: 'Another email', url: 'mailto:other@example.com' },
+    { label: 'Office', url: 'tel:+8612345678900' },
+  ]);
+  assert.throws(() => parseProfile(header + '\n## Contacts\n- [Unsafe](javascript:alert)'), /contact as/);
+  assert.throws(() => parseProfile(header + '\n## Contacts\n- [Relative](somewhere.html)'), /Contact links must/);
+  assert.throws(() => parseProfile(header + '\n## Contacts\n- Plain text'), /contact as/);
+  assert.throws(() => parseProfile(header + '\n## Other\n- [Example](https://example.com/)'), /## Contacts/);
+});
 
 test('homepage section order accepts moving complete Markdown list lines', async () => {
   const source = await readFile(path.join(root, 'content/home.md'), 'utf8');
@@ -118,6 +135,8 @@ test('real builds follow home.md order and reject errors without replacing the l
     await check();
     assert.deepEqual(sectionOrder(await readHome()), parseHomeOrder(original));
     const category = await readFile(path.join(directory, 'dist/projects/index.html'), 'utf8');
+    const profileFile = path.join(directory, 'content/profile.md');
+    await writeFile(profileFile, (await readFile(profileFile, 'utf8')) + '\n## Contacts\n\n- [LinkedIn](https://www.linkedin.com/)\n');
     const reordered = ['notes', 'publications', 'skills', ...parseHomeOrder(original).filter(id => !['notes', 'publications', 'skills'].includes(id))];
     await writeFile(homeFile, reordered.map(id => `- ${id}`).join('\n') + '\n');
     await build();
@@ -125,7 +144,9 @@ test('real builds follow home.md order and reject errors without replacing the l
     const workingHome = await readHome();
     assert.deepEqual(sectionOrder(workingHome), reordered);
     assert.match(workingHome, /data-home-section="notes" class="resume-notes"/);
-    assert.equal(await readFile(path.join(directory, 'dist/projects/index.html'), 'utf8'), category);
+    assert.match(workingHome, /<a href="https:\/\/www.linkedin.com\/" target="_blank" rel="noopener noreferrer">LinkedIn<\/a>/);
+    assert.match(workingHome, /<script src="assets\/contacts.js" defer><\/script>/);
+    assert.equal((await readFile(path.join(directory, 'dist/projects/index.html'), 'utf8')).replace(/<div class="contact"[\s\S]*?<\/div>/, ''), category.replace(/<div class="contact"[\s\S]*?<\/div>/, ''));
     for (const [source, error] of [
       [original + '\n- skills', /Duplicate homepage section/],
       [original.replace('- skills', '- skill'), /Unknown homepage section/],

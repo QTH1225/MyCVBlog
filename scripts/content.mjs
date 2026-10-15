@@ -147,14 +147,31 @@ export function parseRecord(source, filename, category) {
   return { ...metadata, id, order: Number(metadata.order ?? 999), summaryMarkdown: summary?.body || '', body: detailBody };
 }
 
-export async function loadSiteContent(directory) {
-  const read = name => readFile(path.join(directory, name), 'utf8').then(normalize);
-  const profileDocument = parseDocument(await read('profile.md'), ['name', 'phone', 'email', 'website', 'websiteLabel', 'github', 'githubLabel'], ['name'], 'content/profile.md');
-  if (profileDocument.body.trim()) fail('content/profile.md', 'Profile uses metadata fields only');
+export function parseProfile(source, file = 'content/profile.md') {
+  const profileDocument = parseDocument(source, ['name', 'phone', 'email', 'website', 'websiteLabel', 'github', 'githubLabel'], ['name'], file);
+  const contacts = [];
+  if (profileDocument.body.trim()) {
+    const sections = documentSections(profileDocument.body, file);
+    if (sections.length !== 1 || sections[0].title !== 'Contacts') fail(file, 'Additional links belong under ## Contacts');
+    listItems(sections[0].body, file);
+    for (const token of md.parse(sections[0].body, {})) {
+      if (token.type !== 'inline') continue;
+      const children = token.children;
+      if (children.length !== 3 || children[0].type !== 'link_open' || children[1].type !== 'text' || !children[1].content.trim() || children[2].type !== 'link_close') fail(file, 'Write each additional contact as - [Label](https://example.com/)');
+      const url = children[0].attrGet('href');
+      if (!/^(https?:\/\/|mailto:|tel:)/i.test(url)) fail(file, 'Contact links must use https://, http://, mailto:, or tel:');
+      contacts.push({ label: children[1].content, url });
+    }
+  }
   const fields = profileDocument.metadata;
-  const profile = { name: fields.name, phone: fields.phone, email: fields.email,
+  return { name: fields.name, phone: fields.phone, email: fields.email, contacts,
     website: fields.website ? { label: fields.websiteLabel || fields.website, url: fields.website } : undefined,
     github: fields.github ? { label: fields.githubLabel || 'GitHub', url: fields.github } : undefined };
+}
+
+export async function loadSiteContent(directory) {
+  const read = name => readFile(path.join(directory, name), 'utf8').then(normalize);
+  const profile = parseProfile(await read('profile.md'));
   const records = async category => {
     const filenames = (await readdir(path.join(directory, category))).filter(name => name.endsWith('.md'));
     const items = await Promise.all(filenames.map(async filename => parseRecord(await read(`${category}/${filename}`), filename, category)));

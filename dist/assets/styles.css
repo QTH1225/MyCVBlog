@@ -65,6 +65,10 @@ a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !im
 .identity h1 { margin: 0 0 3px; font-size: 34px; line-height: 1.2; font-weight: 400; }
 .identity h1 a { color: inherit; text-decoration: none; }
 .contact { display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; column-gap: 10px; row-gap: 3px; font-size: 15px; }
+.contact-item { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.contact[data-balanced] { flex-direction: column; align-items: stretch; }
+.contact-row { display: flex; justify-content: center; align-items: baseline; gap: inherit; }
+.contact-row > .separator:first-child { display: none; }
 .contact a { text-decoration: none; }
 .contact .phone { color: inherit; }
 .contact .separator { color: var(--ink); }
@@ -171,11 +175,8 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
 
 @media screen and (max-width: 760px) {
   .paper { width: calc(100% - 28px); padding: 28px 24px; margin: 14px auto; }
-  .contact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; max-width: 480px; margin-inline: auto; font-size: 14px; }
+  .contact { gap: 4px 12px; max-width: 480px; margin-inline: auto; font-size: 14px; }
   .contact .separator { display: none; }
-  .contact > :not(.separator) { min-width: 0; overflow-wrap: anywhere; }
-  /* Separators occupy alternating DOM positions; center a final unpaired item. */
-  .contact > :last-child:nth-child(4n + 1) { grid-column: 1 / -1; }
   .entry-top, .entry-sub { flex-wrap: wrap; gap: 2px 12px; }
   .location { text-align: left; }
   .entry-sub .dates { margin-left: auto; }
@@ -219,6 +220,9 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
   .identity { margin-bottom: 15px; break-inside: avoid; }
   .identity h1 { font-size: 25pt; }
   .contact { font-size: 9.5pt; column-gap: 8px; }
+  .contact[data-balanced] { flex-direction: row; align-items: baseline; }
+  .contact-row { display: contents; }
+  .contact-row > .separator:first-child { display: inline; }
   .breadcrumb, .section-action, .footer, .skip-link,
   .note-meta a, .note-toc, .resume-notes { display: none !important; }
   section { margin-top: 13px; }

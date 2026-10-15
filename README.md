@@ -18,7 +18,7 @@ Adapted from **Vaishanth R**'s [Resume Professional Template - Software Engineer
 
 - **Edit Markdown directly.** Maintain résumé entries, projects, experience, activities, and publications in documents without editing JavaScript arrays or generating source code.
 - **Résumé styling.** Locally bundled Charter fonts, muted blue headings, thin rules, bold titles, and right-aligned dates. Shared identity headers appear on category and detail pages. Return links sit to the right of the title: details return to their category, and categories return to the résumé.
-- **Mobile layout.** Contact details use two equal columns on narrow screens; activity dates move to their own left-aligned line on phones. Automatic number/date linking is disabled where supported, while explicit contact links stay clickable.
+- **Mobile layout.** Contact details balance according to their number and rendered width: three short items share a row, four use 2+2, and five use 3+2 with the last row centered when space permits. Longer labels wrap into fewer items per row. Activity dates move to their own left-aligned line on phones. Automatic number/date linking is disabled where supported, while explicit contact links stay clickable.
 - **Separate previews and details.** A project's `## Summary` section supplies its homepage preview; the remaining sections form the detail page. The activity preview shows only the role, club, and date.
 - **Images and mathematics.** Project bodies and notes support Markdown images, KaTeX equations, code, tables, and quotations. Equations are rendered at build time and fonts are bundled locally.
 - **Static output.** Generate plain HTML/CSS and assets for static hosting, offline reading, mobile layouts, and printing, without a frontend framework or an online CDN at reading time.
@@ -148,6 +148,17 @@ githubLabel: GitHub
 ```
 
 Only `name` is required. Remove a contact field's entire line to omit it. The name also appears in page headers, browser titles, and footers. Masked numbers are plain text, while numeric phone numbers receive dialing links. If you change the public adapter attribution, update the license documents as well.
+
+To add a fifth contact or more, append a `## Contacts` section **after the closing `---`** in `content/profile.md`:
+
+```markdown
+## Contacts
+
+- [LinkedIn](https://www.linkedin.com/in/your-handle/)
+- [Google Scholar](https://scholar.google.com/)
+```
+
+Each item must be a plain Markdown link using `https://`, `http://`, `mailto:`, or `tel:`. These links follow the existing phone, email, website, and GitHub fields in list order. A small locally bundled script measures the loaded font and available width to balance the rows without changing that order. On narrow screens it uses at most three contacts per row, favors even row counts, and centers every row; long addresses can wrap on their own line. Desktop and printed contacts can share one row when they fit. The links remain available with JavaScript disabled, using ordinary centered wrapping.
 
 ### Education and Skills
 

@@ -42,7 +42,8 @@ function buildSite(content, notes) {
       profile.email ? `<a href="mailto:${escape(profile.email)}">${escape(profile.email)}</a>` : '',
       profile.website ? `<a href="${safeUrl(profile.website.url)}" target="_blank" rel="noopener noreferrer">${escape(profile.website.label)}</a>` : '',
       profile.github ? `<a href="${safeUrl(profile.github.url)}" target="_blank" rel="noopener noreferrer">${escape(profile.github.label)}</a>` : '',
-    ].filter(Boolean);
+      ...profile.contacts.map(item => `<a href="${safeUrl(item.url)}"${/^https?:/i.test(item.url) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escape(item.label)}</a>`),
+    ].filter(Boolean).map(item => `<span class="contact-item">${item}</span>`);
     return `<!doctype html>
 <html lang="${t.htmlLang}">
 <head>
@@ -55,6 +56,7 @@ function buildSite(content, notes) {
   <link rel="icon" href="${link('assets/favicon.svg')}" type="image/svg+xml">
   <link rel="preload" href="${link('assets/fonts/charter-regular.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${link('assets/styles.css')}">
+  <script src="${link('assets/contacts.js')}" defer></script>
   ${active === 'notes' || body.includes('katex-mathml') ? `<link rel="stylesheet" href="${link('assets/katex/katex.min.css')}">` : ''}
 </head>
 <body id="top">
@@ -168,6 +170,7 @@ await cp(path.join(root, 'node_modules/katex/dist/katex.min.css'), path.join(kat
 await cp(path.join(root, 'node_modules/katex/dist/fonts'), path.join(katexDirectory, 'fonts'), { recursive: true });
 await cp(path.join(root, 'node_modules/katex/LICENSE'), path.join(katexDirectory, 'LICENSE.txt'));
 await writeFile(path.join(output, 'assets', 'styles.css'), await readFile(path.join(root, 'src', 'styles.css')));
+await writeFile(path.join(output, 'assets', 'contacts.js'), await readFile(path.join(root, 'src', 'contacts.js')));
 for (const [filename, html] of allPages) {
   const target = path.join(output, filename);
   await mkdir(path.dirname(target), { recursive: true });
