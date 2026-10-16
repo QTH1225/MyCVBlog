@@ -38,6 +38,17 @@ export function renderMarkdown(note, notes, page, relativeLink, { contentsLabel 
     delimiters: 'dollars',
     katexOptions: { throwOnError: true, trust: false, strict: 'ignore', output: 'htmlAndMathml' },
   });
+  const languages = { py: 'Python', python: 'Python', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', html: 'HTML', css: 'CSS', json: 'JSON', yaml: 'YAML', yml: 'YAML', md: 'Markdown', markdown: 'Markdown', bash: 'Bash', sh: 'Shell', shell: 'Shell', powershell: 'PowerShell', ps1: 'PowerShell', cpp: 'C++', c: 'C', csharp: 'C#', cs: 'C#', java: 'Java', rust: 'Rust', go: 'Go', sql: 'SQL', latex: 'LaTeX', tex: 'LaTeX', matlab: 'MATLAB', text: 'Plain text', plaintext: 'Plain text' };
+  const codeBlock = token => {
+    const language = token.info?.trim().split(/\s+/)[0] || '';
+    const label = Object.hasOwn(languages, language.toLowerCase()) ? languages[language.toLowerCase()] : language || 'Plain text';
+    const lineCount = token.content ? token.content.replace(/\n$/, '').split('\n').length : 0;
+    const collapsible = lineCount > 20;
+    const languageClass = /^[\w+-]+$/.test(language) ? ` class="language-${escape(language)}"` : '';
+    return `<div class="code-block" data-code-lines="${lineCount}"${collapsible ? ' data-collapsible="true" data-expanded="false"' : ''}><div class="code-toolbar"><span class="code-language">${escape(label)}</span><button class="code-copy" type="button" aria-label="Copy ${escape(label)} code" hidden>Copy</button><span class="code-status" role="status"></span></div><pre><code${languageClass}>${escape(token.content)}</code></pre>${collapsible ? `<button class="code-toggle" type="button" aria-expanded="false" hidden>Show all ${lineCount} lines</button>` : ''}</div>\n`;
+  };
+  md.renderer.rules.fence = (tokens, index) => codeBlock(tokens[index]);
+  md.renderer.rules.code_block = (tokens, index) => codeBlock(tokens[index]);
   const imageRenderer = md.renderer.rules.image;
   md.renderer.rules.image = (tokens, index, options, env, renderer) => {
     const token = tokens[index];
@@ -66,6 +77,10 @@ export function renderMarkdown(note, notes, page, relativeLink, { contentsLabel 
     } else if (href.startsWith('assets/')) {
       if (href.includes('..') || href.includes('\\')) throw new Error(`Invalid asset link in ${note.id}`);
       token.attrSet('href', relativeLink(page, href));
+      if (/\.pdf(?:[?#]|$)/i.test(href)) {
+        token.attrSet('target', '_blank');
+        token.attrSet('rel', 'noopener noreferrer');
+      }
     } else if (!href.startsWith('#')) {
       throw new Error(`Links in ${note.id} must use note:slug, assets/..., #anchor, or https://`);
     }

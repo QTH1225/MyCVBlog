@@ -15,6 +15,7 @@
   <link rel="preload" href="../../assets/fonts/charter-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../assets/styles.css">
   <script src="../../assets/contacts.js" defer></script>
+  <script src="../../assets/code-blocks.js" defer></script>
   <link rel="stylesheet" href="../../assets/katex/katex.min.css">
 </head>
 <body id="top">
@@ -29,39 +30,39 @@
 <h2 id="1-create-a-note" class="section-heading">1. Create a Note</h2>
 <p>Copy <code>templates/note.md</code> into <code>notes</code>, for example as <code>my-first-note.md</code>. Use lowercase letters, numbers, and hyphens in the filename. Each note needs only one English file.</p>
 <p>Start the note with this metadata:</p>
-<pre><code class="language-yaml">---
+<div class="code-block" data-code-lines="6"><div class="code-toolbar"><span class="code-language">YAML</span><button class="code-copy" type="button" aria-label="Copy YAML code" hidden>Copy</button><span class="code-status" role="status"></span></div><pre><code class="language-yaml">---
 title: My First Note
 date: 2026-10-14
 summary: A short description of what this note covers.
 tags: Learning, Journal
 ---
-</code></pre>
+</code></pre></div>
 <p>Keep each metadata field on a single line. The title appears on the note page and in note lists. The date controls sorting. Both the homepage and the Notes index show only titles and dates; summaries and tags appear on the note detail page.</p>
 <h2 id="2-write-the-body" class="section-heading">2. Write the Body</h2>
 <p>Use <code>##</code> for section headings and regular paragraphs for the body. Lists, blockquotes, code blocks, and tables are supported.</p>
 <p>Use <code>$...$</code> for inline math and <code>$$...$$</code> for display equations:</p>
-<pre><code class="language-markdown">The stress–strain relation is $\sigma = E\varepsilon$.
+<div class="code-block" data-code-lines="5"><div class="code-toolbar"><span class="code-language">Markdown</span><button class="code-copy" type="button" aria-label="Copy Markdown code" hidden>Copy</button><span class="code-status" role="status"></span></div><pre><code class="language-markdown">The stress–strain relation is $\sigma = E\varepsilon$.
 
 $$
 E = \frac{\sigma}{\varepsilon}
 $$
-</code></pre>
+</code></pre></div>
 <h2 id="3-add-images" class="section-heading">3. Add Images</h2>
 <p>Copy an image into <code>assets/images</code>, then add it to the note:</p>
-<pre><code class="language-markdown">![Image description](assets/images/your-image.png)
+<div class="code-block" data-code-lines="3"><div class="code-toolbar"><span class="code-language">Markdown</span><button class="code-copy" type="button" aria-label="Copy Markdown code" hidden>Copy</button><span class="code-status" role="status"></span></div><pre><code class="language-markdown">![Image description](assets/images/your-image.png)
 
 *Figure 1. A caption below the image.*
-</code></pre>
+</code></pre></div>
 <p>PNG, JPG, WebP, SVG, and other browser-supported image formats work. For local images, use filenames containing letters and numbers.</p>
 <h2 id="4-preview-the-result" class="section-heading">4. Preview the Result</h2>
 <p>Run this command in the project folder:</p>
-<pre><code class="language-powershell">npm run dev
-</code></pre>
+<div class="code-block" data-code-lines="1"><div class="code-toolbar"><span class="code-language">PowerShell</span><button class="code-copy" type="button" aria-label="Copy PowerShell code" hidden>Copy</button><span class="code-status" role="status"></span></div><pre><code class="language-powershell">npm run dev
+</code></pre></div>
 <p>Open the local website. Saving a note regenerates the pages automatically; refresh your browser to see the changes.</p>
 <p>If you open the local HTML files directly, first run:</p>
-<pre><code class="language-powershell">npm run build
+<div class="code-block" data-code-lines="2"><div class="code-toolbar"><span class="code-language">PowerShell</span><button class="code-copy" type="button" aria-label="Copy PowerShell code" hidden>Copy</button><span class="code-status" role="status"></span></div><pre><code class="language-powershell">npm run build
 npm run check
-</code></pre>
+</code></pre></div>
 <p>Then open <code>dist/notes/index.html</code>. Images, math styles, and fonts are all included in the generated website folder.</p>
 <h2 id="5-test-images-and-math" class="section-heading">5. Test Images and Math</h2>
 <p>Open <a href="../media-math-test/index.html">Images and Math Test</a> to see images, equations, matrices, and tables in action, then use the same syntax in your own notes.</p>

@@ -15,6 +15,10 @@ for (const page of pages) {
   if (!html.includes('<meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">')) throw new Error(`Missing mobile auto-link detection settings: ${page}`);
   if (page.startsWith('zh/') || !html.includes('<html lang="en">')) throw new Error(`Incorrect page language: ${page}`);
   if (html.includes('hreflang=') || html.includes('language-switch') || /\p{Script=Han}/u.test(html)) throw new Error(`Non-English content or language controls remain: ${page}`);
+  if (page !== 'index.html') {
+    const homeHref = html.match(/<nav class="breadcrumb"[^>]*><a href="([^"]+)"/u)?.[1];
+    if (!homeHref || path.resolve(path.dirname(file), homeHref) !== path.join(root, 'index.html')) throw new Error(`Category and detail pages must have a breadcrumb back to the résumé: ${page}`);
+  }
   if (page.split('/').length === 3) {
     const backHref = html.match(/<div class="detail-heading">[\s\S]*?<a class="section-action" href="([^"]+)"/u)?.[1];
     const categoryPage = path.resolve(root, page.split('/')[0], 'index.html');

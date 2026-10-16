@@ -1,8 +1,8 @@
 ---
 title: Images and Math Test
 date: 2026-10-14
-summary: Test local images, inline math, display equations, matrices, tables, and code blocks.
-tags: Markdown, Math, Images
+summary: Test local images, inline math, display equations, matrices, tables, code blocks, and PDF links.
+tags: Markdown, Math, Images, PDF
 ---
 
 This note tests images and mathematical notation alongside regular text. It uses the same anonymous header as the rest of the website.
@@ -111,3 +111,56 @@ $$
 $$
 
 This note checks image loading, equation layout, and page overflow on mobile screens.
+
+## 7. PDF Files
+
+PDF attachments use ordinary Markdown links:
+
+- [Open the local PDF sample](assets/documents/pdf-link-test.pdf)
+- [Open the W3C PDF sample](https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf)
+
+The local file is stored in `assets/documents/` and is included when the site is built. Both PDF links open in a new tab, keeping this note available. Your browser may open its PDF viewer or offer to save the file, depending on its settings.
+
+```markdown
+[Open the local PDF sample](assets/documents/pdf-link-test.pdf)
+
+[Open an external PDF](https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf)
+```
+
+## 8. Code Block Controls
+
+The language is shown above each code block. Hover over a block or focus its copy button with the keyboard to reveal Copy. Touch devices keep the button visible. Copy always includes the complete code, even while the block is folded.
+
+Blocks longer than 20 lines initially show the first 12 lines. Use the button below this example to expand or collapse it. Printing includes all lines.
+
+```python
+from statistics import fmean
+
+
+def moving_average(values, window=3):
+    if window < 1:
+        raise ValueError("window must be positive")
+    if window > len(values):
+        return []
+
+    result = []
+    for start in range(len(values) - window + 1):
+        sample = values[start:start + window]
+        result.append(fmean(sample))
+    return result
+
+
+def normalize(values):
+    maximum = max(values, default=0)
+    if maximum == 0:
+        return [0 for value in values]
+    return [value / maximum for value in values]
+
+
+measurements = [12, 14, 13, 18, 17, 21, 20]
+smoothed = moving_average(measurements)
+scaled = normalize(smoothed)
+
+for index, value in enumerate(scaled, start=1):
+    print(f"Sample {index}: {value:.3f}")
+```

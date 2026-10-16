@@ -148,6 +148,18 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
 .note-toc a { color: var(--muted); text-decoration: none; }
 .note-toc a:hover { color: var(--link); }
 .markdown-body { line-height: 1.85; overflow-wrap: anywhere; }
+.note-article .markdown-body a:is([href^="https://"], [href^="http://"]):not(:has(img))::after {
+  content: "";
+  display: inline-block;
+  width: .75em;
+  height: .75em;
+  margin-inline-start: .2em;
+  vertical-align: .02em;
+  background-color: currentColor;
+  opacity: .7;
+  -webkit-mask: url('./icons/external-link.svg') center / contain no-repeat;
+  mask: url('./icons/external-link.svg') center / contain no-repeat;
+}
 .markdown-body p { margin: 14px 0; }
 .markdown-body .section-heading { margin-top: 32px; margin-bottom: 16px; padding-bottom: 8px; font-size: 19px; }
 .markdown-body h3 { margin: 24px 0 12px; font-size: 17px; }
@@ -156,6 +168,25 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
 .markdown-body pre { max-width: 100%; overflow-x: auto; padding: 16px 18px; background: #f6f7f8; border: 1px solid #e8ebed; border-radius: 3px; line-height: 1.65; }
 .markdown-body code { font-family: 'Cascadia Code', Consolas, KaiTi, 'Kaiti SC', STKaiti, monospace; font-size: .87em; background: #f2f4f6; padding: 2px 4px; border-radius: 2px; }
 .markdown-body pre code { background: none; padding: 0; overflow-wrap: normal; white-space: pre; }
+.code-block { margin: 18px 0; border: 1px solid #e8ebed; border-radius: 3px; background: #f6f7f8; overflow: hidden; }
+.code-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 34px; padding: 5px 12px; border-bottom: 1px solid #e8ebed; }
+.code-language { color: var(--muted); font: 12px 'Cascadia Code', Consolas, monospace; }
+.code-copy, .code-toggle { font: inherit; font-size: 12px; color: var(--link); cursor: pointer; }
+.code-copy { padding: 2px 8px; border: 1px solid #ccd6dd; border-radius: 3px; background: #fff; opacity: 0; pointer-events: none; }
+.code-copy[hidden], .code-toggle[hidden] { display: none; }
+.code-block:is(:hover, :focus-within) .code-copy { opacity: 1; pointer-events: auto; }
+.code-copy:hover { border-color: var(--link); }
+.code-copy:focus-visible, .code-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.markdown-body .code-block pre { margin: 0; border: 0; border-radius: 0; padding: 14px 16px; font-size: .87rem; line-height: 1.65; }
+.markdown-body .code-block pre code { font-size: inherit; line-height: inherit; }
+.code-block[data-collapsible="true"][data-expanded="false"] pre { max-height: calc(19.8em + 14px); padding-bottom: 0; overflow-y: auto; }
+.code-block.is-enhanced[data-collapsible="true"][data-expanded="false"] pre { overflow-y: hidden; }
+.code-toggle { width: 100%; padding: 7px 12px; border: 0; border-top: 1px solid #e8ebed; background: #edf1f4; text-align: center; }
+.code-toggle:hover { background: #e4ebef; }
+.code-status { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (hover: none) {
+  .code-copy { opacity: 1; pointer-events: auto; }
+}
 .markdown-body blockquote { margin: 18px 0; padding: 2px 16px; border-left: 3px solid #a7becd; color: #52616b; background: #f8fafb; }
 .markdown-body ul, .markdown-body ol { padding-left: 25px; }
 .markdown-body .table-scroll { max-width: 100%; overflow-x: auto; margin: 20px 0; }
@@ -253,6 +284,10 @@ figcaption { margin-top: 7px; color: var(--muted); font-size: 14px; font-style: 
   .markdown-body p:has(> img) { break-inside: avoid-page; break-after: avoid-page; }
   .markdown-body pre { white-space: pre-wrap; overflow: visible; }
   .markdown-body pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .code-copy, .code-toggle { display: none !important; }
+  .code-block { overflow: visible; break-inside: auto; }
+  .code-toolbar { break-after: avoid-page; }
+  .markdown-body .code-block pre { max-height: none !important; overflow: visible !important; }
   .markdown-body .table-scroll, .markdown-body eqn { overflow: visible; }
   .markdown-body thead { display: table-header-group; }
   p, li { orphans: 3; widows: 3; }

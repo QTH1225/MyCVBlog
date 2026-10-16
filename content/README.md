@@ -31,3 +31,5 @@
 文件名就是页面地址中的 id，使用小写英文、数字和连字符。网站统一使用英文，文档中的字段名请保留，字段值与正文可替换。
 
 图片都使用 `![Image description](assets/images/your-image.png)`。行内公式使用 `$...$`，独立公式使用 `$$...$$`。更多字段、完整格式及运行命令见根目录[中文说明](../README.zh-CN.md)或 [English README](../README.md)。
+
+PDF 放到 `assets/documents/`，正文写作 `[Open PDF](assets/documents/pdf-link-test.pdf)`，也可以使用完整 HTTPS 地址链接外部 PDF。路径从 `assets/` 开始，无需手写 `../../`。[测试笔记](../notes/media-math-test.md)第 7 节提供了可点击示例。只更新附件时运行 `npm run build` 后刷新。

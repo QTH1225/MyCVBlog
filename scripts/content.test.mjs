@@ -93,6 +93,34 @@ test('project template renders images, formulas and note links in a detail route
   assert.throws(() => renderMarkdown({ id: 'broken', body: '[Missing](note:missing)' }, [], 'index.html', relativeLink), /Unknown note link/);
 });
 
+test('code blocks show their language, escape source and fold only beyond twenty lines', () => {
+  const render = body => renderMarkdown({ id: 'code-test', body }, [], 'notes/code-test/index.html', relativeLink).html;
+  const short = render('```py\nprint("<script>& test")\n```');
+  assert.match(short, /class="code-language">Python<\/span>/);
+  assert.match(short, /class="language-py"/);
+  assert.match(short, /&lt;script&gt;&amp; test/);
+  assert.match(short, /class="code-copy"[^>]* hidden>Copy/);
+  assert.doesNotMatch(short, /data-collapsible|<script>/);
+  const twenty = Array.from({ length: 20 }, (_, i) => `line ${i}`).join('\n');
+  assert.doesNotMatch(render('```text\n' + twenty + '\n```'), /data-collapsible/);
+  const long = render('```python\n' + twenty + '\nlast line\n```');
+  assert.match(long, /data-code-lines="21" data-collapsible="true" data-expanded="false"/);
+  assert.match(long, /last line\n<\/code>/);
+  assert.match(long, /aria-expanded="false" hidden>Show all 21 lines/);
+  assert.match(render('```\nplain\n```'), /class="code-language">Plain text/);
+  assert.match(render('    indented code'), /class="code-language">Plain text/);
+  assert.match(render('```constructor\nvalue\n```'), /class="code-language">constructor/);
+});
+
+test('PDF attachment links work from nested note and project pages without replacing the source page', () => {
+  for (const page of ['notes/test/index.html', 'projects/test/index.html']) {
+    const result = renderMarkdown({ id: 'pdf-test', body: '[Local PDF](assets/documents/pdf-link-test.pdf#page=1)\n\n[External PDF](https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf)\n\n[Other asset](assets/images/note-demo.svg)' }, [], page, relativeLink).html;
+    assert.match(result, /href="\.\.\/\.\.\/assets\/documents\/pdf-link-test.pdf#page=1" target="_blank" rel="noopener noreferrer"/);
+    assert.match(result, /href="https:\/\/www.w3.org\/WAI\/ER\/tests\/xhtml\/testfiles\/resources\/pdf\/dummy.pdf" target="_blank" rel="noopener noreferrer"/);
+    assert.match(result, /href="\.\.\/\.\.\/assets\/images\/note-demo.svg">Other asset/);
+  }
+});
+
 test('adding, editing, ordering and removing Markdown records needs no code changes', async () => {
   const base = path.resolve(tmpdir());
   const directory = await mkdtemp(path.join(base, 'cvblog-content-'));

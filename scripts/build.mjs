@@ -60,7 +60,7 @@ function buildSite(content, notes) {
   <link rel="preload" href="${link('assets/fonts/charter-bold.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="${link('assets/fonts/charter-italic.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${link('assets/styles.css')}">
-  <script src="${link('assets/contacts.js')}" defer></script>
+  <script src="${link('assets/contacts.js')}" defer></script>${body.includes('class="code-block"') ? `\n  <script src="${link('assets/code-blocks.js')}" defer></script>` : ''}
   ${active === 'notes' || body.includes('katex-mathml') ? `<link rel="stylesheet" href="${link('assets/katex/katex.min.css')}">` : ''}
 </head>
 <body id="top">
@@ -152,7 +152,7 @@ function buildSite(content, notes) {
     addPage(page, shell(page, item.title, 'publications', `${breadcrumb(page, t.publication, { label: t.publicationsBreadcrumb, target: publicationPage })}<article class="publication-entry">${detailHeading(page, item.title, { label: t.publicationsBreadcrumb, target: publicationPage }, item.url)}<p class="publication-authors">${publicationAuthors(item)}</p>${publicationVenue(item)}</article>`));
   }
   const notesPage = 'notes/index.html';
-  addPage(notesPage, shell(notesPage, t.notesTitle, 'notes', `<section>${heading(t.notes, notesPage, home, 'back')}${notes.length ? noteList(notesPage) : `<p class="empty">${escape(t.emptyNotes)}</p>`}</section>`));
+  addPage(notesPage, shell(notesPage, t.notesTitle, 'notes', `${breadcrumb(notesPage, t.notesTitle)}<section>${heading(t.notes, notesPage, home, 'back')}${notes.length ? noteList(notesPage) : `<p class="empty">${escape(t.emptyNotes)}</p>`}</section>`));
   for (const note of notes) {
     const page = `notes/${note.id}/index.html`;
     const rendered = renderMarkdown(note, notes, page, relativeLink, { contentsLabel: t.contents });
@@ -175,6 +175,7 @@ await cp(path.join(root, 'node_modules/katex/dist/fonts'), path.join(katexDirect
 await cp(path.join(root, 'node_modules/katex/LICENSE'), path.join(katexDirectory, 'LICENSE.txt'));
 await writeFile(path.join(output, 'assets', 'styles.css'), await readFile(path.join(root, 'src', 'styles.css')));
 await writeFile(path.join(output, 'assets', 'contacts.js'), await readFile(path.join(root, 'src', 'contacts.js')));
+await writeFile(path.join(output, 'assets', 'code-blocks.js'), await readFile(path.join(root, 'src', 'code-blocks.js')));
 for (const [filename, html] of allPages) {
   const target = path.join(output, filename);
   await mkdir(path.dirname(target), { recursive: true });

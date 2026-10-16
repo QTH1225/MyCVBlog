@@ -24,6 +24,7 @@ Adapted from **Vaishanth R**'s [Resume Professional Template - Software Engineer
 - **Static output.** Generate plain HTML/CSS and assets for static hosting, offline reading, mobile layouts, and printing, without a frontend framework or an online CDN at reading time.
 - **Page transitions.** An early light background and preloaded regular, bold, and italic fonts reduce loading flashes. Supporting browsers use a short native transition between same-origin pages; reduced-motion settings disable it. Contact rows are only rebuilt when their grouping changes.
 - **Validation.** Check metadata, filenames, local links, fonts, English pages, and sample mathematics. Content parser tests are included.
+- **Consistent breadcrumbs.** Every category page, including Notes, shows a breadcrumb back to the résumé. Detail pages retain their breadcrumb hierarchy and return-to-category link.
 
 The sample identity uses an anonymous name, masked phone number, and example links. Some projects, roles, publications, and activities are illustrative entries. Replace them with your own public information before using the site as a personal résumé.
 
@@ -246,6 +247,25 @@ $$
 PNG, JPG, WebP, SVG, and other browser-supported formats work. Local images are recommended for offline use. Equations support KaTeX syntax, including subscripts, fractions, integrals, matrices, and `aligned`. Long equations, code blocks, and tables scroll within their own containers. Dollar signs inside code remain literal; escape an ordinary dollar sign in prose as `\$`. Raw HTML is not executed.
 
 Links support full HTTP(S) URLs, `assets/...`, `#anchors`, and `note:filename` without `.md`. References to missing notes fail the build. Bare URLs are not automatically linked, and arbitrary relative page links are not currently supported.
+
+HTTP(S) text links in note bodies automatically display a small external-link icon. Internal note links, local attachments, anchors, and linked images keep their existing appearance. No extra Markdown syntax is needed; the icon is a locally bundled SVG.
+
+### Code Blocks
+
+Use fenced Markdown with a language name such as `python`, `javascript`, `bash`, or `json`. The language label is generated automatically; omitted languages and indented code show **Plain text**. The Copy button appears when hovering over the block or focusing it with the keyboard, and stays visible on touch devices. Copy includes the entire source, preserving indentation and line breaks.
+
+Blocks longer than 20 lines initially show 12 lines, with an expand/collapse button underneath. Printing always includes the full code. Without JavaScript, long blocks remain vertically scrollable and their text can be selected normally. Clipboard permission or browser restrictions can prevent copying; a failure message then asks the reader to copy manually. See section 8 of the [media test note](notes/media-math-test.md) for a long example. Code language labels are informational; syntax highlighting is not included. The controls also apply to code in project and experience bodies.
+
+### PDF Attachments
+
+Place PDFs in `assets/documents/` and link to them from a note or project body using ordinary Markdown:
+
+```markdown
+[Open a PDF](assets/documents/pdf-link-test.pdf)
+[Open an external PDF](https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf)
+```
+
+Always start local attachment paths with `assets/`, including when the Markdown file is inside `notes/` or a content category directory. The build copies the PDF and adjusts the link for the generated page. Local PDF links and external links open in a new tab, preserving the note or project page. Browsers open their PDF viewer or save the file according to their settings. This is a file link, not an embedded viewer. Try section 7 of the [media test note](notes/media-math-test.md). After changing a PDF without editing its note, run `npm run build` and refresh because resources in deeper directories are not watched automatically.
 
 ## Styling, Builds, and Deployment
 
